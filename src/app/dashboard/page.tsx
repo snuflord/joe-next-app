@@ -1,8 +1,6 @@
 // Dashboard
 
 import LargeCard from "../components/dashboard/LargeCard";
-import Search from "../components/dashboard/search";
-import Navigation from "../components/Navigation";
 import { getArticles } from "../lib/data";
 import { Key, Suspense } from "react";
 import { Card } from "../components/dashboard/Cards";
@@ -24,12 +22,6 @@ export default async function Dashboard ({
 
     return (
       <main className="flex min-h-screen flex-col items-start justify-between px-2 md:px-0 container mx-auto">
-        
-        <Navigation />
-
-        <div className="my-4 max-w-3xl w-full">
-            <Search placeholder='Search codebase'/>
-        </div>
         
 
         <LargeCard />

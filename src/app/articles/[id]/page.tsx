@@ -3,6 +3,8 @@ import Navigation from "@/app/components/Navigation";
 import Image from "next/image";
 import Markdown from 'react-markdown'
 import defaultImage from '@/public/tech_bg_next.jpeg'
+import { FaPencilAlt, FaTimes } from "react-icons/fa";
+import Link from "next/link";
 
 
 // params is article, which is the individual article returned to the card mapped in CardWrapper 
@@ -11,6 +13,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     const json = await getArticle(params.id);
 
     const article = json.data.attributes;
+    const articleId = json.data.id;
 
     console.log(json)
 
@@ -47,6 +50,12 @@ export default async function Page({ params }: { params: { id: string } }) {
                     priority
                     alt="tech-bg" />
 
+
+                    <div className="flex">
+                        <Link className="flex mt-3 items-center bg-emerald-500 hover:bg-emerald-400 p-3 rounded-lg transition-all duration-300" href={`/articles/edit/${articleId}`}>
+                            <FaPencilAlt className="mr-3"/> Edit Event
+                        </Link>
+                    </div>
                 </div>
             </div> 
         </section>
