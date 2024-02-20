@@ -1,6 +1,6 @@
 
 
-import { getArticle } from "@/app/lib/data"
+import { getArticle } from "@/app/lib/alldata";
 import EditEvent from "@/app/components/articles/EditEvent";
 
 // EDIT EVENT PAGE

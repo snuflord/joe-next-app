@@ -7,9 +7,10 @@ import Markdown from "react-markdown";
 import defaultImage from '@/public/tech_bg_next.jpeg'
 import { FaTimes } from "react-icons/fa";
 import { useState } from "react";
-import { mySlugify } from "@/app/lib/helpers";
+import slugify from "react-slugify";
+import Link from "next/link";
 
-
+// EDIT ALREADY MADE ARTICLE - CLIENT COMPONENT
 export default function EditEvent({article}: {article: any}) {
 
 
@@ -19,7 +20,8 @@ export default function EditEvent({article}: {article: any}) {
     const articleId = article.data.id
 
 
-    console.log(articleData);
+    // console.log(articleData);
+    // console.log(articleId)
 
     const [values, setValues] = useState({
         title: articleData.title,
@@ -34,8 +36,6 @@ export default function EditEvent({article}: {article: any}) {
 
         // spread operator across values, update state with the value of target.
         setValues({...values, [name]: value})
-
-        console.log(values)
     }
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -57,7 +57,7 @@ export default function EditEvent({article}: {article: any}) {
         const updatedArticleData = {
             title: values.title,
             description: values.description,
-            slug: mySlugify(values.title),
+            slug: slugify(values.title),
         }
 
         const formData = new FormData()
@@ -131,12 +131,16 @@ export default function EditEvent({article}: {article: any}) {
                             onChange={handleInputChange}
                         />
                     </div>
+                    
                 </div>
 
-                <div className="flex space-x-4 font-bold">
-                    <button className="bg-emerald-500 hover:bg-emerald-400 p-4 rounded-lg my-5 md:min-w-24" onClick={handleSubmit} type="submit" value="submit">UPDATE</button>
-                    <button className="bg-red-400 hover:bg-red-500 p-4  my-5 transition-all duration-300 rounded-lg md:min-w-24" onClick={deleteEvent}>DELETE</button>
+                <div className="flex space-x-4 font-bold my-5 text-center">
+                    <button className="bg-emerald-500 hover:bg-emerald-400 p-4 rounded-lg md:min-w-24" onClick={handleSubmit} type="submit" value="submit">UPDATE</button>
+                    <button className="bg-red-400 hover:bg-red-500 p-4  transition-all duration-300 rounded-lg md:min-w-24" onClick={deleteEvent}>DELETE</button>
+                    <Link className="p-4 rounded-lg bg-white hover:bg-white/90 font-bold text-black md:min-w-24" href={`/articles/${articleId}`}>BACK</Link>
                 </div>
+
+                
                    
             </form>
         </div>

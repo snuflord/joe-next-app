@@ -1,44 +1,43 @@
 
-import { API_URL } from "../../../config";
+// import { API_URL } from "../../../config";
 
 
-export async function getArticles({
-    query,
-    page = 1,
-    limit = 10
-  }: {
-    query?: string
-    page: number
-    limit: number
-  }) {
 
-    const res = await fetch(`${API_URL}/articles/?[populate]=*&pagination[limit]=10&[pagesize]=3&pagination[start]=0`)
+// export async function getArticles({
+//     query,
+//     page = 1,
+//     limit = 10
+//   }: {
+//     query?: string
+//     page: number
+//     limit: number
+//   }) {
 
-    if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error('Failed to fetch data')
-    }
+//     const res = await fetch(`${API_URL}/articles/?[populate]=*&pagination[limit]=10&[pagesize]=3&pagination[start]=0`)
+
+//     if (!res.ok) {
+//       // This will activate the closest `error.js` Error Boundary
+//       throw new Error('Failed to fetch data')
+//     }
    
-    const json = await res.json();
+//     const json = await res.json();
     
-    return json.data;
+//     return json.data;
 
-}
+// }
 
-export async function getArticle(id: string) {
+// export async function getArticle(id: string) {
 
-    const res = await fetch(`${API_URL}/articles/${id}?[populate]=*`)
+//     const res = await fetch(`${API_URL}/articles/${id}?[populate]=*`)
 
-    if (!res.ok) {
-        // This will activate the closest `error.js` Error Boundary
-        throw new Error('Failed to fetch data')
-      }
+//     if (!res.ok) {
+//         // This will activate the closest `error.js` Error Boundary
+//         throw new Error('Failed to fetch data')
+//       }
      
-      const json = await res.json();
+//       const json = await res.json();
 
-    //   console.log(json)
+//     //   console.log(json)
    
-      return json;
-}
-
-
+//       return json;
+// }

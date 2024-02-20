@@ -1,7 +1,7 @@
 // Dashboard
 
 import LargeCard from "../components/dashboard/LargeCard";
-import { getArticles } from "../lib/data";
+import { getArticles } from "../lib/alldata";
 import { Key, Suspense } from "react";
 import { Card } from "../components/dashboard/Cards";
 import { CardSkeleton } from "../ui/skeletons";
