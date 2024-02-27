@@ -1,12 +1,11 @@
 'use client'
 
 import { FaUser } from 'react-icons/fa';
-// import { toast, ToastContainer } from 'react-toastify';
-// import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link';
-// import Layout from '@/components/Layout';
-// import AuthContext from '@/context/AuthContext';
+
 
 export default function RegisterPage() {
 
@@ -15,27 +14,11 @@ export default function RegisterPage() {
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
 
-    // login function and error state from AuthContext, which is wrapping app.js
-    // const {register, error} =  useContext(AuthContext)
+    // login function and error state from AuthContext, which is wrapping root layout.
 
-    // useEffect(() => {
-    //     if (error) {
-    //       console.log("error", error.message.errors[0].message);
-    //       toast.error( error.message.errors[0].message);
-    //     }
-    // }, [error]);
-
-    // const handleSubmit =(e)=> {
-    //     e.preventDefault()
-
-    //     if(password !== passwordConfirm) {
-    //         toast.error('Passwords do not match!')
-    //     }
-
-    //     if(password === passwordConfirm) {
-    //         register({username, email, password})
-    //     }
-    // }
+    const handleSubmit = () => {
+        console.log('submit')
+    }
 
   return (
     <div title={'User Registration'}>
@@ -44,9 +27,9 @@ export default function RegisterPage() {
                 <FaUser /> Sign Up
             </h1>
 
-            {/* <ToastContainer /> */}
+            <ToastContainer />
 
-            <form className='w-full px-2' > 
+            <form className='w-full px-2' onSubmit={handleSubmit}> 
 
                 <div className='flex flex-col my-2'>
                     <label className='font-bold mb-2' htmlFor='username'>Username</label>
