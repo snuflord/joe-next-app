@@ -1,15 +1,19 @@
 'use client'
 
 import { FaImage } from "react-icons/fa";
-import Image from "next/image";
+// import Image from "next/image";
 import { useState } from "react";
 import { API_URL } from "../../../../config";
 import slugify from "react-slugify";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from "next/navigation";
+
 // import { revalidatePath } from "next/cache";
 // import { redirect } from "next/navigation";
+// import ImageUpload from "@/app/components/articles/ImageUpload";
 
 
-import { useRouter } from "next/navigation";
 
 // CREATE ARTICLE
 export default function CreateArticle() {
@@ -19,36 +23,35 @@ export default function CreateArticle() {
   const [values, setValues] = useState({
       title: '',
       description: '',
-      slug: '',
-      date: '',
   });
 
   const handleInputChange = (e: { target: { name: any; value: string; }; }) => {
 
     // the 'name' property in each input allows state to be changed with one function.
     const {name, value} = e.target
-
-    // spread operator across values, update state with the value of target.
     setValues({...values, [name]: value})
-
-    // console.log(values)
   }
+
+  // const imageUploaded = async (e: any) => {
+    
+  //   const res = await fetch(`${API_URL}/api/events?filters[id][$eq]=${values.id}&populate=*`)
+  //   const data = await res.json()
+  //   console.log(data)
+  // }
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
 
-      e.preventDefault();
-  
-      // Validation
-  
+      e.preventDefault()
+
       // the 'some' method looks through the elements and checks whether any of them have empty values. If any return empty values, they are 'hasEmptyFields'.
       const hasEmptyFields = Object.values(values).some((element) => element === '')
   
-      if(hasEmptyFields ) {
+      if(hasEmptyFields) {
         
         console.log('empty fields')
+        toast.error("Empty fields!")
+        return
       } 
-  
-      
 
       const articleData = {
           title: values.title,
@@ -59,8 +62,7 @@ export default function CreateArticle() {
       const formData = new FormData()
   
       formData.append('data', JSON.stringify(articleData))
-
-  
+    
       const res = await fetch(`${API_URL}/articles`, {
         method: 'POST',
       //   headers: { 
@@ -69,8 +71,6 @@ export default function CreateArticle() {
       //   },
         body: formData
       })
-
-      
   
       if(!res.ok) {
       //   if(res.status === 403 || res.status === 401 ) {
@@ -89,10 +89,23 @@ export default function CreateArticle() {
       }
   }
 
-
   return (
-
     <div className="w-100 md:w-1/2 min-h-72 bg-blue-500 rounded-xl">
+
+
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
+
         <div className="p-2 md:p-6">
             <h1 className="text-xl md:text-3xl font-bold mb-5">Create an article</h1>
             
@@ -110,33 +123,13 @@ export default function CreateArticle() {
                           onChange={handleInputChange}
                       />
                     </div>
-                    
-                    
+                    {/* <div className="flex flex-col">
+                      <ImageUpload evtId={evtId} imageUploaded={imageUploaded}/>
+                    </div> */}
                 </div>
 
                     <button className="bg-emerald-500 p-4 rounded-lg mt-5" onClick={handleSubmit} type="submit" value="submit">Submit</button>
             </form>
-
-              {/* <div className="mt-3">
-                  <h2 className='font-bold text-2xl mb-2'>Event Image</h2>
-                  {imagePreview ? (
-                    <Image
-                    src={defaultImage}
-                    alt="Event Image"
-                    width={170}
-                    height={100}
-                    className="rounded-lg"
-                  />
-                  ) : <div>
-                      <p>No image uploaded</p>
-                    </div>}
-                </div> */}
-
-              {/* <div className="mt-2">
-                <button onClick={toggleOpen} className="btn btn-secondary">
-                  <FaImage />  Set Image
-                </button>
-              </div> */}
         </div>
     </div>
   )

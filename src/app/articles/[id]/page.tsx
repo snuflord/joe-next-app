@@ -15,14 +15,10 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     const article = json.data.attributes;
     const articleId = json.data.id;
-    const articleImg = json.data.attributes.media.data[0].attributes.formats.small.url;
 
-    console.log(articleImg)
+    // const articleImg = json.data.attributes.media.data[0].attributes.url;
+    // console.log(articleImg)
 
-    // console.log(json)
-
-    // const articleImg = json.data.attributes.media.data;
-    // console.log(articleImg);
 
     return (
         <section className="px-2 md:px-0 container mx-auto">
@@ -41,19 +37,36 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <Markdown className="mt-5">
                         {article.body}
                     </Markdown>
-                   
-                    
-
-                    {/* <p>{json.data.attributes.media.data.attributes.id}</p> */}
 
                     
-                    <Image src={articleImg}
+                    {/* <Image src={!json.data.attributes.media.data ? defaultImage : articleImg}
                     width={560}
                     height={620}
                     className="block rounded-2xl mt-5 md:w-full"
                     priority
-                    alt="tech-bg" />
+                    alt="tech-bg" /> */}
 
+                    {json && json.data.attributes.media.data ? (
+                        <Image
+                            src={json.data.attributes.media.data[0].attributes.url}  // Replace with your API data property containing the image URL
+                            alt="API Image"
+                            width={560}
+                            height={620}
+                            className="block rounded-2xl mt-5 md:w-full"
+                            priority={true}
+                            placeholder="empty"
+                        />
+                    ) : (
+                        <Image
+                            src={defaultImage}
+                            alt="Default Image"
+                            width={560}
+                            height={620}
+                            className="block rounded-2xl mt-5 md:w-full"
+                            priority={true}
+                            placeholder="empty"
+                        />
+                    )}
 
                     <div className="flex">
                         <Link className="flex mt-3 items-center bg-emerald-500 hover:bg-emerald-400 p-3 rounded-lg transition-all duration-300" href={`/articles/edit/${articleId}`}>
