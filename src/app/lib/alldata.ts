@@ -1,5 +1,5 @@
 
-import { API_URL } from "../../../config";
+import { API_URL, NEXT_URL } from "../../../config";
 
 
 
@@ -40,4 +40,20 @@ export async function getArticle(id: string) {
     //   console.log(json)
    
       return json;
+}
+
+export async function getLoggedInUser() {
+
+  const jwt = localStorage.getItem("jwt");
+
+  const res = await fetch(`${API_URL}/users/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  })
+
+  const user = res.json();
+  console.log(user)
+  return user
 }

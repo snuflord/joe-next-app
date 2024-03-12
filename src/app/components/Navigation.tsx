@@ -3,22 +3,34 @@
 import Link from "next/link"
 import { usePathname } from 'next/navigation';
 import clsx from "clsx";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
+
 
 export default function Navigation() {
+
+  const { user, isAuthenticated, checkUserLoggedIn } = useAuth();
 
   const pathname = usePathname();
 
   const links = [
     { name: 'Post', href: '/articles/create', },
     { name: 'Search', href: '/dashboard/search', },
+    { name: 'Register', href: '/dashboard/register' },
     { name: 'Home', href: '/', },
   ];
 
     return (
-        <div className="z-10 my-5 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-          <Link href='/dashboard' className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
+
+        <div className="z-10 my-8 w-full items-center flex justify-between font-mono text-sm ">
+
+          <div>
+          <Link href='/dashboard' className="dark:border-neutral-800 rounded-lg dark:bg-zinc-800/30 dark:from-inherit   lg:rounded-xl p-4">
             <code className="font-mono font-bold">DASHBOARD</code>
           </Link>
+          
+          {user ? <span className="font-bold underline underline-offset-4 ml-2">Hello, {user.username}!</span> : <span className="font-bold underline underline-offset-4 ml-2">No user</span>}
+          </div>
           
 
           <div className="space-x-3 group">
@@ -45,8 +57,13 @@ export default function Navigation() {
                     </Link>
                 );
               })}
+              {!user ? <Link className='p-4 bg-emerald-500 hover:bg-emerald-400 rounded-lg' key='logout' href="/dashboard/login">Login</Link> : <></>}
+
+              {user ? <Link className='p-4 bg-emerald-500 hover:bg-emerald-400 rounded-lg' key='logout' href="/dashboard" >Logout</Link> : <></>}
           </div>
-          
         </div>
+
+
+        
     )
 }

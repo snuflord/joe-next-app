@@ -38,14 +38,6 @@ export default async function Page({ params }: { params: { id: string } }) {
                         {article.body}
                     </Markdown>
 
-                    
-                    {/* <Image src={!json.data.attributes.media.data ? defaultImage : articleImg}
-                    width={560}
-                    height={620}
-                    className="block rounded-2xl mt-5 md:w-full"
-                    priority
-                    alt="tech-bg" /> */}
-
                     {json && json.data.attributes.media.data ? (
                         <Image
                             src={json.data.attributes.media.data[0].attributes.url}  // Replace with your API data property containing the image URL

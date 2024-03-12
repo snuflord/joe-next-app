@@ -49,7 +49,7 @@ export default function CreateArticle() {
       if(hasEmptyFields) {
         
         console.log('empty fields')
-        toast.error("Empty fields!")
+        toast.error("Please fill in all fields")
         return
       } 
 
@@ -78,6 +78,8 @@ export default function CreateArticle() {
       //     return
       //   }
       //   toast.error("Something went wrong")
+
+      toast.error("An article with this exact title already exists, please modify your title")
 
       console.log('something went wrong - cannot post yet')
       
