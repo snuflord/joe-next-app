@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { NEXT_URL } from '../config';
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 
 // Define the shape of your user object
@@ -13,11 +15,13 @@ interface User {
 
 // Define the authentication context type
 interface AuthContextType {
+    error: null;
+    token: null;
     user: User | null;
     isAuthenticated: boolean;
     checkUserLoggedIn: () => void;
     registerUser: (user: any) => Promise<void>;
-    loginUser: (credentials: { email: string; password: string }) => Promise<void>; // Specify login credentials types
+    loginUser: (user: any) => Promise<void>; // Specify login credentials types
     logoutUser: () => Promise<void>; // Add logoutUser function type
 }
 
@@ -35,21 +39,26 @@ export const useAuth = () => {
 
 // Create the AuthProvider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  
+    const [error, setError] = useState(null)
+    const [token, setToken] = useState(null)
+    const [user, setUser] = useState<User | null>(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const checkUserLoggedIn = async () => {
     try {
       const res = await fetch(`${NEXT_URL}/api/checkUserLoggedIn`);
       const data = await res.json();
 
-      console.log(data);
+        // console.log(data);
 
       if (res.ok) {
+
         setUser(data);
         setIsAuthenticated(true);
+
       } else {
+
         setUser(null);
         setIsAuthenticated(false);
       }
@@ -58,10 +67,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const getUserToken = async () => {
+    try {
+        const res = await fetch(`${NEXT_URL}/api/getUserToken`)
+        const data = await res.json()
+        // console.log(data)
+
+        if(res.ok) {
+            setToken(data)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
   const registerUser = async (user: { username: string; identifier: string; password: string }) => {
     try {
         
-        console.log(`user is ${user.username}, email is ${user.identifier}, password is ${user.password}`);
+        // console.log(`user is ${user.username}, email is ${user.identifier}, password is ${user.password}`);
 
         const res = await fetch(`${NEXT_URL}/api/registerUser`, {
             method: 'POST',
@@ -83,37 +106,58 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
 
         const data = await res.json();
-        console.log(data);
+        // console.log(`Auth context registerUser data is: ${data}`);
+        console.log(data)
 
         if (res.ok) {
+
             setUser(data);
+            setIsAuthenticated(true);
+            redirect('/dashboard');
+
         } else {
-            // Handle error if needed
-            // setError(data);
-            // setError(null);
+            const errorMessage = data.error.message;
+            setError(errorMessage);
         }
     } catch (error) {
-        // Handle fetch or JSON parsing errors
+        
         console.error('Error in registerUser:', error);
     }
 };
 
-  const loginUser = async ({ email, password }: { email: string; password: string }) => {
+  const loginUser = async (user: { identifier: string; password: string }) => {
+
     try {
+
+        // console.log(`email is ${user.identifier}, password is ${user.password}`);
+
       const res = await fetch(`${NEXT_URL}/api/loginUser`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+            email: user.identifier,
+            password: user.password,
+        }),
       });
 
-      const data: User = await res.json();
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            // The response is not JSON, handle accordingly
+            console.error('Unexpected content type:', contentType);
+            return;
+        }
 
-      console.log(data);
+        const data = await res.json();
+        // console.log(data);
 
       if (res.ok) {
+
         setUser(data);
+        setIsAuthenticated(true)
+        redirect('/dashboard');
+
       } else {
         // Handle error if needed
         // setError(data);
@@ -141,10 +185,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     checkUserLoggedIn();
+    getUserToken();
   }, []); // Run once on component mount
 
   const contextValue: AuthContextType = {
+    error,
     user,
+    token,
     isAuthenticated,
     checkUserLoggedIn,
     registerUser,

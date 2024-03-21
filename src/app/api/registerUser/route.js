@@ -1,19 +1,14 @@
 import { API_URL } from '../../../../config'
-// https://github.com/jshttp/cookie
-
 import { NextResponse } from 'next/server'
-
-// import cookie from 'cookie'
-
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation'
 
 // THIS IS THE REGISTER API REQUEST
 
 export async function POST(req, res) {
 
     const { username, email, password } = await req.json();
-
-    console.log(`Here is the returned username: ${username}, email: ${email}, and password: ${password}`);
 
     const strapiRes = await fetch(`${API_URL}/auth/local/register`, {
         method: 'POST',
@@ -32,14 +27,21 @@ export async function POST(req, res) {
     // console.log('api/register success!:', data)
 
     if(strapiRes.ok) {
+
+        cookies().set({
+            name: 'token',
+            value: data.jwt,
+            httpOnly: true,
+        })
         
-        cookies().set('token', data.jwt)
+        revalidatePath('/dashboard')
         
         return NextResponse.json(data);
+
     } else {
-        // otherwise error
-        // res.status(data.error.status).json({message: data.error.details})
+        
+        // console.log(`register failed response: ${data.error.message}`)
+
+        return NextResponse.json(data)
     }
-    
-    return NextResponse.json(data);
 }

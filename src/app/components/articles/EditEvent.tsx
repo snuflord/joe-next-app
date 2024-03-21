@@ -3,16 +3,20 @@
 import { useRouter } from "next/navigation";
 import { API_URL } from "../../../../config";
 import Image from "next/image";
-import Markdown from "react-markdown";
+
 import defaultImage from '@/public/tech_bg_next.jpeg'
-import { FaTimes } from "react-icons/fa";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useState } from "react";
 import slugify from "react-slugify";
 import Link from "next/link";
+import { useAuth } from "../../../../context/AuthContext";
 
 // EDIT ALREADY MADE ARTICLE - CLIENT COMPONENT
 export default function EditEvent({article}: {article: any}) {
 
+    const { token, user } = useAuth();
 
     const router = useRouter()
 
@@ -52,7 +56,10 @@ export default function EditEvent({article}: {article: any}) {
           console.log('empty fields')
         } 
     
-       
+        if(user == null || undefined) {
+            toast.error('Only signed in users can post items')
+            return
+        }
 
         const updatedArticleData = {
             title: values.title,
@@ -67,10 +74,10 @@ export default function EditEvent({article}: {article: any}) {
     
         const res = await fetch(`${API_URL}/articles/${articleId}`, {
           method: 'PUT',
-        //   headers: { 
-        //     'Content-Type' : 'multipart/form-data',
-        //     // Authorization: `Bearer ${token}`
-        //   },
+          headers: { 
+            // 'Content-Type' : 'multipart/form-data',
+            Authorization: `Bearer ${token}`
+          },
           body: formData
         })
 
@@ -97,6 +104,9 @@ export default function EditEvent({article}: {article: any}) {
     if(confirm('Are you sure?')) {
         const res = await fetch(`${API_URL}/articles/${articleId}`, {
         method: 'DELETE',
+        headers: { 
+            Authorization: `Bearer ${token}`
+          },
         })
 
         if(!res.ok) {
@@ -114,6 +124,20 @@ export default function EditEvent({article}: {article: any}) {
 
   return (
     <div>
+
+        <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+        />
+
         <span className="font-bold underline text-2xl mb-5 inline-block">EDIT</span>
         <h2 className="text-3xl font-bold mb-5">{articleData.title}</h2>
         <div>

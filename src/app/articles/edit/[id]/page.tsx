@@ -1,5 +1,3 @@
-
-
 import { getArticle } from "@/app/lib/alldata";
 import EditEvent from "@/app/components/articles/EditEvent";
 

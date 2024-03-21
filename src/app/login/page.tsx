@@ -5,9 +5,9 @@ import { FaUser } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
-import { API_URL } from "../../../../config";
+import { API_URL } from "../../../config";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../../../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 
 
 export default function LoginPage() {
@@ -29,10 +29,8 @@ export default function LoginPage() {
         // spread operator across values, update state with the value of target.
         setValues({...values, [name]: value})
 
-        console.log(values)
     }
 
-    
     const handleLogin = async (e: { preventDefault: () => void; }) => {
         e.preventDefault()
 
@@ -45,29 +43,14 @@ export default function LoginPage() {
             return
         } 
 
-        try {
-            const res = await fetch(`${API_URL}/auth/local`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    identifier: values.identifier,
-                    password: values.password,
-                }),
-                method: 'POST'
-            });
+        else {
+            const user = {
+                identifier: values.identifier,
+                password: values.password,
+            };
 
-            const data = await res.json()
-            localStorage.setItem('jwt', data.jwt);
-
-            console.log(data)
-
+            loginUser(user)
             router.push('/dashboard')
-
-        } catch {
-
-            console.log('error')
         }
     }
 
@@ -94,7 +77,7 @@ export default function LoginPage() {
                 <button type='submit' value='Login' className='btn my-4 w-full'>Login</button>
             </form>
 
-            <p className='my-2'>Don't have an account? <Link className='underline' href='/account/register'>Register</Link></p>
+            <p className='my-2'>Don't have an account? <Link className='underline' href='/dashboard/register'>Register</Link></p>
         </div>
   )
 }

@@ -7,6 +7,7 @@
 // on using CLIENT AND SERVER components: https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns
  
 import { useEffect } from 'react';
+import Link from 'next/link';
  
 // error: This object is an instance of JavaScript's native Error object.
 export default function Error({error, reset,}: {
@@ -30,6 +31,7 @@ export default function Error({error, reset,}: {
       >
         Try again
       </button>
+      <Link className='mt-4 rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400' href="/dashboard">Back to Dashboard</Link>
     </main>
   );
 }

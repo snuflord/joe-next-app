@@ -8,7 +8,7 @@ export async function GET() {
 
   const nextCookies = cookies();
   const token = nextCookies.get('token')?.value;
-  console.log(`Here is the ${token}`)
+  // console.log(`Here is the ${token}`)
 
   const strapiRes = await fetch(`${API_URL}/users/me`, {
     headers: {
@@ -24,10 +24,10 @@ export async function GET() {
     return NextResponse.json(user)
 
   } else {
-    // res.status(403).json({ message: 'user forbidden' });
-    console.log('no user')
+    
+    console.log('api>checkedloggedinuser: no user')
+    return NextResponse.json(null)
   }
-  // return NextResponse.json(user)
 }
 
 

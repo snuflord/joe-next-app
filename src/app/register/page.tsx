@@ -5,16 +5,21 @@ import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect } from 'react'
 import Link from 'next/link';
-import { API_URL } from '../../../../config';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 
 
 export default function RegisterPage() {
 
-    const { registerUser, } = useAuth();
+    const { error, registerUser, } = useAuth();
 
-    const router = useRouter()
+    useEffect(() => {
+        if (error) {
+          console.log(`Register Page error is: ${error}`);
+          toast.error( error );
+        }
+    }, [error]);
+
+    console.log('hello')
 
     const [values, setValues] = useState({
         username: '',
@@ -51,48 +56,18 @@ export default function RegisterPage() {
 
             console.log('Passwords do not match')
             toast.error('Passwords do not match!')
-            
             return
 
         } else {
             
-            // const res = await fetch(`${API_URL}/auth/local/register`,
-            // {
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         username: values.username,
-            //         email: values.email,
-            //         password: values.password,
-            //     }),
-            //     method: 'POST'
-            // });
-            // const data = await res.json()
-            
-            // // console.log(data)
-
-            // if(res.ok) {
-            
-            //     console.log(data)
-            //     // this needs to be set in http only cookie. 
-            //     localStorage.setItem('jwt', JSON.stringify(data.jwt));
-            //     router.push('/dashboard')
-            // } else {
-
-            //     toast.error(data.error.message)
-            // }
 
             const user = {
                 username: values.username,
                 identifier: values.email,
                 password: values.password,
             };
-            
 
-            console.log(user)
-
-            registerUser(user)
+            registerUser(user);
         }
     }
 

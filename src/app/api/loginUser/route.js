@@ -1,50 +1,46 @@
 import { API_URL } from '../../../../config'
+import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 
-import cookie from 'cookie'
+// THIS IS THE LOGIN API REQUEST
 
-export default async (req, res) => {
+export async function POST(req, res) {
 
-    if(req.method === 'POST') {
+    const { email, password } = await req.json();
 
-        const { identifier, password } = req.body
+    // console.log(`Here is the login request email: ${email}, and login request password: ${password}`)
 
-        const strapiRes = await fetch(`${API_URL}/auth/local`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                identifier,
-                password
-            })
+    const strapiRes = await fetch(`${API_URL}/auth/local/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+
+            identifier: email,
+            password: password,
+        }),
+    })
+
+    const data = await strapiRes.json();
+
+    if(strapiRes.ok) {
+
+        // console.log('api/loginUser success!:', data)
+
+        cookies().set({
+            name: 'token',
+            value: data.jwt,
+            httpOnly: true,
         })
+        
+        revalidatePath('/dashboard')
+        
+        return NextResponse.json(data);
 
-        const data = await strapiRes.json()
-        console.log('api/login:', data)
-
-        if(strapiRes.ok) {
-
-            res.setHeader(
-                    'Set-Cookie',
-                    cookie.serialize('token', data.jwt, {
-                    httpOnly: true,
-                    // if equal to development, false. 
-                    secure: process.env.NODE_ENV !== 'development',
-                    maxAge: 60 * 60 * 24 * 7, // 1 week
-                    sameSite: 'strict',
-                    // accessible for everywhere around site in http header:
-                    path: '/',
-                })
-              )
-
-            res.status(200).json({user: data.user})
-        } else {
-            res.status(data.error.status).json({message: data.error.details})
-        }
-
-    
     } else {
-        res.setHeader('Allow', ['POST'])
-        res.status(405).json({message: `Method ${req.method} not allowed`})
+        console.log(data.error.message)
+        return NextResponse.json({message: data.error.message})
     }
 }
