@@ -7,7 +7,7 @@ import EditButton from "@/app/components/articles/EditButton";
 // params is article, which is the individual article returned to the card mapped in CardWrapper 
 export default async function Page({ params }: { params: { id: string } }) {
 
-    const json = await getArticle(params.id);
+    const json = await getArticle(params.id, true);
 
     const article = json.data.attributes;
 

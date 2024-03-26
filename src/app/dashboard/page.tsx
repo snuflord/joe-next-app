@@ -26,7 +26,7 @@ export default async function Dashboard ({
 
         <LargeCard />
 
-        <div className='flex space-x-6'>
+        {/* <div className='flex space-x-6'>
             <Link
               href={{
                 pathname: '/movies',
@@ -54,7 +54,7 @@ export default async function Dashboard ({
             >
               Next
             </Link>
-          </div>
+          </div> */}
 
         <div className="grid grid-rows-1 grid-cols-1 md:grid-cols-3 md:grid-rows-3 gap-6 w-full my-4">
             

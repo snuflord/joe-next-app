@@ -1,6 +1,5 @@
 
-import { API_URL } from "../../../config";
-
+import { API_URL, NEXT_URL } from "../../../config";
 
 
 export async function getArticles({
@@ -13,7 +12,9 @@ export async function getArticles({
     limit: number
   }) {
 
-    const res = await fetch(`${API_URL}/articles/?[populate]=*&pagination[limit]=12&[pagesize]=3&pagination[start]=0`)
+    const res = await fetch(`${API_URL}/articles/?[populate]=*&pagination[limit]=12&[pagesize]=3&pagination[start]=0`,
+      {cache: 'no-store' },
+    )
 
     if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary
@@ -25,27 +26,44 @@ export async function getArticles({
     return json.data;
 }
 
-export async function getArticle(id: string) {
+export async function getArticle(id: string, revalidate = false) {
+  const baseURL =
+    process.env.NODE_ENV === "development"
+      ? `${NEXT_URL}`
+      : "https://your-live-website.com";
 
-  const res = await fetch(`${API_URL}/articles/${id}?[populate]=*`)
+  if (revalidate) {
+    await fetch(`${baseURL}/api/article/revalidateArticle`, {
+      method: "POST",
+    });
+  }
+
+  const res = await fetch(`${API_URL}/articles/${id}?[populate]=*`, { 
+    headers: {
+      'Next-Cache-Tags': 'article'
+    },
+    next: { tags: ['article'] },
+    cache: 'no-store' 
+  });
 
   if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
-      throw new Error('Failed to fetch data')
-    }
-    
-    const json = await res.json();
-    return json;
+    throw new Error('Failed to fetch data');
+  }
+  
+  const json = await res.json();
+  return json;
 }
+
 
 export async function getUserArticles(id: string) {
   try {
-    const response = await fetch(`${API_URL}/articles?associatedUser=${id}`, {
+    
+    const response = await fetch(`${API_URL}/articles?&pagination[limit]=6&filters[associatedUser][$eq]=${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // Add any additional headers if needed
       },
+      cache: 'no-store', 
     });
 
     if (!response.ok) {
@@ -55,9 +73,9 @@ export async function getUserArticles(id: string) {
     const data = await response.json();
     return data;
   } catch (error) {
-    // Handle errors here, such as logging or displaying an error message
+  
     console.error('Error fetching articles:', error);
-    throw error; // Re-throw the error to be caught by the caller
+    throw error; 
   }
 }
 

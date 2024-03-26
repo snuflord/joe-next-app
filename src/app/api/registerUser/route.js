@@ -2,7 +2,6 @@ import { API_URL } from '../../../../config'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation'
 
 // THIS IS THE REGISTER API REQUEST
 

@@ -1,20 +1,25 @@
 
-
-import { getArticles, } from "@/app/lib/data"
-import { Key } from "react"
-import { CardSkeleton } from "@/app/ui/skeletons"
-import { Suspense } from "react"
-import { useSearchParams } from 'next/navigation'
 import Link from "next/link"
 
 
-export async function Card({article}: {article: any}) {
+export function Card({article}: {article: any}) {
 
-    const data = article
+    const data = article;
+
+    const truncatedDescription =
+    data.attributes.description.length > 100
+      ? `${data.attributes.description.substring(0, 150)}...`
+      : data.attributes.description;
+
     return (
-        <Link href={`/articles/${data.id}`} className="transition duration-300 bg-emerald-500 rounded-lg p-4 hover:bg-indigo-500">
-            <h3>{data.attributes.title}</h3>
-            <p>{data.attributes.description}</p>
+        <Link href={`/articles/${data.id}`} className="group transition duration-300 bg-slate-800 rounded-lg p-4 hover:bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-32 h-full">
+            <div className="flex justify-between">
+                <h3 className="font-bold underline underline-offset-2 mb-2 max-w-[70%]">{data.attributes.title}</h3>
+                <Link href='/dashboard' className="font-bold underline-offset-2 text-emerald-500 group-hover:text-white group-hover:underline">Author: {data.attributes.associatedUsername}</Link>
+            </div>
+            
+            <p className="">{truncatedDescription}</p>
+            
         </Link>
     )
 }

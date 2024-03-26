@@ -21,6 +21,7 @@ export async function POST(req, res) {
             identifier: email,
             password: password,
         }),
+        cache: 'no-store'
     })
 
     const data = await strapiRes.json();

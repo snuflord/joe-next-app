@@ -15,7 +15,8 @@ export default function CreateArticle() {
 
   const { token, user } = useAuth();
 
-  const userId = user?.id.toString()
+  const username = user?.username;
+  const userId = user?.id.toString();
 
   const router = useRouter();
 
@@ -55,6 +56,7 @@ export default function CreateArticle() {
         description: values.description,
         slug: slugify(values.title),
         associatedUser: userId,
+        associatedUsername: username,
       }
 
       const formData = new FormData();
