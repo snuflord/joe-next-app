@@ -36,12 +36,12 @@ export default function LargeCard() {
       {user ? <span className="block font-bold text-3xl mb-3">Hello, {user.username}!</span> : <></>}
       <span className="font-bold mb-5 inline-block">The current time is {date}</span>
 
-      <div className="relative grid grid-cols-1 md:grid-cols-3 md:flex-row gap-3  h-full">
+      <div className="relative grid grid-cols-1 md:grid-cols-3 md:flex-row gap-6  h-full">
 
-      {articles ? articles.map((article: { id: Key | null | undefined; attributes: any }) => (
+      {articles && articles.length > 0 ? articles.map((article: { id: Key | null | undefined; attributes: any }) => (
               <Card key={article.id} article={article}/>
             )) : 
-                <p className='font-bold text-2xl w-full md:w-2/3 md:text-5xl'>You haven't posted anything yet! Your latest posts will appear here.</p>
+                <p className='font-bold text-2xl w-full md:text-5xl'>You haven't posted anything yet! Your latest posts will appear here.</p>
             }
       </div> 
     </div>

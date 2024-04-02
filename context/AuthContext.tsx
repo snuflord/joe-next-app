@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { NEXT_URL } from '../config';
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { useRouter } from "next/navigation";
 
 
 // Define the shape of your user object
@@ -13,9 +14,18 @@ interface User {
   // ... other properties
 }
 
+interface Error {
+  
+    status?: number;
+    name?: string;
+    message?: string;
+    details?: object;
+  
+}
+
 // Define the authentication context type
 interface AuthContextType {
-    error: null;
+    error: Error | null;
     token: null;
     user: User | null;
     isAuthenticated: boolean;
@@ -39,6 +49,8 @@ export const useAuth = () => {
 
 // Create the AuthProvider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+
+    const router = useRouter();
   
     const [error, setError] = useState(null)
     const [token, setToken] = useState(null)
@@ -69,17 +81,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const getUserToken = async () => {
     try {
-        const res = await fetch(`${NEXT_URL}/api/getUserToken`)
-        const data = await res.json()
-        // console.log(data)
+        const res = await fetch(`${NEXT_URL}/api/getUserToken`);
 
-        if(res.ok) {
-            setToken(data)
+        const data = await res.json();
+
+        if (res.ok) {
+            setToken(data);
+        } else {
+            setToken(null); 
         }
     } catch (error) {
-        console.log(error)
+        console.error('Error fetching user token:', error);
+
+        return
     }
-  }
+};
+
 
   const registerUser = async (user: { username: string; identifier: string; password: string }) => {
     try {
@@ -125,48 +142,40 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 };
 
-  const loginUser = async (user: { identifier: string; password: string }) => {
+const loginUser = async (user: { identifier: string; password: string }) => {
+  try {
+    const res = await fetch(`${NEXT_URL}/api/loginUser`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: user.identifier,
+        password: user.password,
+      }),
+    });
 
-    try {
-
-        // console.log(`email is ${user.identifier}, password is ${user.password}`);
-
-      const res = await fetch(`${NEXT_URL}/api/loginUser`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: user.identifier,
-            password: user.password,
-        }),
-      });
-
-        const contentType = res.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            // The response is not JSON, handle accordingly
-            console.error('Unexpected content type:', contentType);
-            return;
-        }
-
-        const data = await res.json();
-        // console.log(data);
-
-      if (res.ok) {
-
-        setUser(data);
-        setIsAuthenticated(true)
-        redirect('/dashboard');
-
-      } else {
-        // Handle error if needed
-        // setError(data);
-        // setError(null);
-      }
-    } catch (error) {
-      console.error('Error in loginUser:', error);
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      console.error('Unexpected content type:', contentType);
+      return;
     }
-  };
+
+    const data = await res.json();
+
+    if (res.ok && data.data !== null) {
+      setUser(data);
+      setIsAuthenticated(true);
+      
+      router.push('/dashboard')
+    } else {
+      
+      setError(data.error);
+    }
+  } catch (error) {
+    console.error('Error in loginUser:', error);
+  }
+};
 
   const logoutUser = async () => {
     try {

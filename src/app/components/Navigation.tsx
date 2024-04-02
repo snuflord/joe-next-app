@@ -13,8 +13,9 @@ export default function Navigation() {
   const [currentUser, setCurrentUser] = useState(user);
 
   useEffect(() => {
+    
     setCurrentUser(user);
-    console.log('nav use effect running')
+    
   }, [user]);
 
   const links = [

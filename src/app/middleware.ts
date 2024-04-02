@@ -1,26 +1,21 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
- 
-export function middleware(request: NextRequest) {
+// // app/api/middleware.ts
 
-    let cookie = request.cookies.get('nextjs')
-    console.log(cookie) // => { name: 'nextjs', value: 'fast', Path: '/' }
-    const allCookies = request.cookies.getAll()
-    console.log(allCookies) // => [{ name: 'nextjs', value: 'fast' }]
-    
-  // Clone the request headers and set a new header `x-hello-from-middleware1`
-  const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-hello-from-middleware1', 'hello')
- 
-  // You can also set request headers in NextResponse.rewrite
-  const response = NextResponse.next({
-    request: {
-      // New request headers
-      headers: requestHeaders,
-    },
-  })
- 
-  // Set a new response header `x-hello-from-middleware2`
-  response.headers.set('x-hello-from-middleware2', 'hello')
-  return response
-}
+// import { NextRequest, NextResponse } from 'next/server';
+// import // Modify the import based on your data layer
+
+// export async function middleware(req: NextRequest) {
+//   const userId = await getUser(req);
+//   const articleId = req.page.params.id;
+
+//   // Check if the user ID matches the article ID
+//   if (userId !== articleId) {
+//     return NextResponse.redirect('/');
+//   }
+
+//   return NextResponse.next();
+// }
+
+// // Add the middleware to your route
+// export const config = {
+//   matcher: ['/app/articles/[id]'],
+// };

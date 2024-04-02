@@ -8,15 +8,18 @@ import defaultImage from '@/public/tech_bg_next.jpeg'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import slugify from "react-slugify";
 import Link from "next/link";
 import { useAuth } from "../../../../context/AuthContext";
+import { User } from "next-auth";
 
 // EDIT ALREADY MADE ARTICLE - CLIENT COMPONENT
 export default function EditEvent({article}: {article: any}) {
 
     const { token, user } = useAuth();
+
+    const userRef = useRef<User | null>(null);
 
     const router = useRouter()
 
@@ -32,6 +35,27 @@ export default function EditEvent({article}: {article: any}) {
         description: articleData.description,
         slug: articleData.slug
     });
+
+    useEffect(() => {
+        if (userRef.current === null && user !== null) {
+          userRef.current = user;
+      
+          if (!articleId) {
+            router.push('/not-found');
+          }
+      
+          if (user?.id && user.id != articleData.associatedUser) {
+            router.push('/articles/not-user');
+          }
+      
+          if (!user) {
+            router.push('/articles/redirected');
+          }
+        }
+      }, [user, articleId, router, articleData.associatedUser]);
+
+    
+    
 
     const handleInputChange = (e: { target: { name: any; value: string; }; }) => {
 
@@ -120,7 +144,6 @@ export default function EditEvent({article}: {article: any}) {
         }
     }
   }
-    
 
   return (
     <div>

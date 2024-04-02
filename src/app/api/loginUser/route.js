@@ -37,11 +37,10 @@ export async function POST(req, res) {
         })
         
         revalidatePath('/dashboard')
-        
         return NextResponse.json(data);
 
     } else {
         console.log(data.error.message)
-        return NextResponse.json({message: data.error.message})
+        return NextResponse.json(data)
     }
 }

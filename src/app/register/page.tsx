@@ -75,7 +75,7 @@ export default function RegisterPage() {
   return (
 
     <div>
-        <div className='w-full md:w-1/2 bg-blue-500 rounded-lg m-auto p-1 md:p-6 shadow-xl flex flex-col items-center'>
+        <div className='w-full h-screen md:w-1/2 m-auto p-1 md:p-6 shadow-xl flex flex-col justify-center items-center'>
             
             <h1 className='flex items-center text-2xl'>
                 <FaUser className='mr-2' /> Sign Up
@@ -108,7 +108,7 @@ export default function RegisterPage() {
                 <button type='submit' value='Login' className='p-4 w-full bg-emerald-500 rounded-lg my-4'>Sign Up</button>
             </form>
 
-            <p className='my-2'>Already have an account? <Link className='underline' href='/dashboard/login'>Log in</Link></p>
+            <p className='my-2'>Already have an account? <Link className='underline' href='/login'>Log in</Link></p>
 
         </div>
     </div>

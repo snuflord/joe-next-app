@@ -11,8 +11,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     const article = json.data.attributes;
 
-    console.log(json)
-    const articleId = json.data.id;
+    console.log(article)
+
+    const propArticle = json.data;
 
     // const articleImg = json.data.attributes.media.data[0].attributes.url;
     // console.log(articleImg)
@@ -33,7 +34,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     </div>
 
                     {/* <span className="block font-bold text-lg">Author: {article.owner.data.attributes.username}</span> */}
-                    {article && article.owner.data ? <span className="font-bold text-lg underline">Author: {article.owner.data.attributes.username}</span> : <span className="font-bold text-lg underline">Author not found</span>}
+                    {article && article.associatedUsername ? <span className="font-bold text-lg underline">Author: {article.associatedUsername}</span> : <span className="font-bold text-lg underline">Author not found</span>}
                     
                     <p className="font-bold md:text-2xl mt-5">
                         {article.description}
@@ -45,7 +46,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                     {json && json.data.attributes.media.data ? (
                         <Image
-                            src={json.data.attributes.media.data[0].attributes.url}  // Replace with your API data property containing the image URL
+                            src={json.data.attributes.media.data[0].attributes.url}
                             alt="API Image"
                             width={560}
                             height={620}
@@ -65,7 +66,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         />
                     )}
 
-                    <EditButton articleId={articleId}/>
+                    <EditButton article={propArticle}/>
                     
                 </div>
             </div> 

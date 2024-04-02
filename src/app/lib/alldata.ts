@@ -47,13 +47,13 @@ export async function getArticle(id: string, revalidate = false) {
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.log('No response from getArticle function in alldata.ts')
+    return null
   }
   
   const json = await res.json();
   return json;
 }
-
 
 export async function getUserArticles(id: string) {
   try {

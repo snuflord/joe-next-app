@@ -1,34 +1,34 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
-import { API_URL } from "../../../config";
-import { useRouter } from "next/navigation";
 import { useAuth } from "../../../context/AuthContext";
 
 
 export default function LoginPage() {
 
-    const { loginUser, } = useAuth();
-
-    const router = useRouter()
-
+    const { error, loginUser, } = useAuth();
+    
     const [values, setValues] = useState({
         identifier: '',
         password: '',
     });
 
+    useEffect(() => {
+        if (error) {
+            toast.error(error.message);
+        }
+    }, [error]);
+
     const handleInputChange = (e: { target: { name: any; value: string; }; }) => {
 
         // the 'name' property in each input allows state to be changed with one function.
         const {name, value} = e.target
-
         // spread operator across values, update state with the value of target.
         setValues({...values, [name]: value})
-
     }
 
     const handleLogin = async (e: { preventDefault: () => void; }) => {
@@ -50,18 +50,21 @@ export default function LoginPage() {
             };
 
             loginUser(user)
-            router.push('/dashboard')
+            // router.push('/dashboard')
         }
     }
+    
 
     return (
     
-    <div className='w-full md:w-1/2 m-auto p-1 md:p-6 shadow-xl flex flex-col items-center'>
+    <div className='w-full h-screen md:w-1/2 m-auto p-1 md:p-6 shadow-xl flex flex-col justify-center items-center'>
             <h1 className='flex items-center text-2xl'>
                 <FaUser /> Log In
             </h1>
 
             <ToastContainer />
+
+            
 
             <form className='w-full px-2' onSubmit={handleLogin}> 
                 <div className='flex flex-col my-2'>
@@ -77,7 +80,7 @@ export default function LoginPage() {
                 <button type='submit' value='Login' className='btn my-4 w-full'>Login</button>
             </form>
 
-            <p className='my-2'>Don't have an account? <Link className='underline' href='/dashboard/register'>Register</Link></p>
+            <p className='my-2'>Don't have an account? <Link className='underline' href='/register'>Register</Link></p>
         </div>
   )
 }
