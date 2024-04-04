@@ -1,6 +1,5 @@
 'use client'
 
-import { FaImage } from "react-icons/fa";
 import { useState } from "react";
 import { API_URL } from "../../../../config";
 import slugify from "react-slugify";
@@ -10,91 +9,258 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../../../context/AuthContext";
 import ImageUpload from "@/app/components/articles/ImageUpload";
 import defaultImage from '@/public/tech_bg_next.jpeg'
+import { ImageResponse } from "next/server";
 
 export default function CreateArticle() {
 
   const { token, user } = useAuth();
 
+  // These values provided from logged in user via context.
   const username = user?.username;
   const userId = user?.id.toString();
 
   const router = useRouter();
 
-  // const [imagePreview, setImagePreview] = useState(defaultImage)
-
-  // let [isOpen, setIsOpen] = useState(false)
-
-  // const toggleOpen = () => {
-  //   setIsOpen(open => !open)
-  // }
+  const [returnArticle, setArticle] = useState({
+    id: undefined || String,
+  })
 
   const [values, setValues] = useState({
       title: '',
       description: '',
+      media: {},
   });
-
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | undefined>();
 
   const handleInputChange = (e: { target: { name: any; value: string; }; }) => {
+
     const { name, value } = e.target;
     setValues({...values, [name]: value});
   }
-
   
+  function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
+      const file = e.target.files?.[0];
+      if (file) {
+        setFile(file);
+        console.log(file)
+      }
+    }
+
+  // const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  //     e.preventDefault();
+
+  //     const hasEmptyFields = Object.values(values).some((element) => element === '');
+  //     if (hasEmptyFields) {
+  //       toast.error("Please fill in all fields");
+  //       return;
+  //     }
+
+  //     // IMAGE UPLOAD
+
+  //     if (!file) {
+  //       console.error('No file selected');
+  //       return;
+  //     }
+  
+  //     const imageFile = {
+  //         media: file,
+  //     }
+  
+  //     const imageData = new FormData();
+  //     imageData.append('files', file);
+  //     // imageData.append('refId', '') 
+  //     imageData.append('ref', 'api::article.article');
+  //     imageData.append('field', 'media');
+  
+  //     imageData.append('data', JSON.stringify(imageFile));
+  
+  //     const responseImg = await fetch(`${API_URL}/upload`, {
+  //       method: 'POST',
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: imageData,
+  //     });
+  
+  //     if(responseImg.ok) {
+  //       const imageResponse = await responseImg.json();
+  //       console.log(imageResponse);
+  //       setFile(imageResponse)
+  //     }
+      
+      
+
+  //     // REST OF ARTICLE DATA
+  //     const articleData = {
+  //       title: values.title,
+  //       description: values.description,
+  //       slug: slugify(values.title),
+  //       associatedUser: userId,
+  //       associatedUsername: username,
+  //       media: file,
+  //     }
+  //     const formData = new FormData();
+  //     formData.append('data', JSON.stringify(articleData));
+
+  //     const res = await fetch(`${API_URL}/articles`, {
+  //       next: {tags: ['articles']},
+  //       method: 'POST',
+  //       headers: { 
+  //         Authorization: `Bearer ${token}`
+  //       },
+  //       body: formData
+  //     });
+
+  //     if (!res.ok) {
+  //       toast.error("Something went wrong, please try again");
+  //       if (res.status == 403) {
+  //         toast.error("You must be signed in to post articles");
+  //       }
+  //       if (res.status == 400) {
+  //         toast.error("An article with this title already exists");
+  //       }
+  //     } else {
+  //       const article = await res.json();
+  //       // router.push(`/articles/${article.data.id}`);
+        
+  //       setArticle(article)
+  //     }
+
+  //     // FINAL STAGE, APPEND IMAGE TO CREATED ARTICLE
+
+  //     const articleImageData = {
+  //       media: file,
+  //     }
+
+  //     const updatedArticle = new FormData();
+
+  //     updatedArticle.append('files', file);
+  //     updatedArticle.append('refId', returnArticle.id) 
+  //     updatedArticle.append('ref', 'api::article.article');
+  //     updatedArticle.append('field', 'media');
+
+  //     updatedArticle.append('data', JSON.stringify(articleImageData))
+
+  //     const resUpd = await fetch(`${API_URL}/articles/${returnArticle?.id}`, {
+  //       next: {tags: ['articles']},
+  //       method: 'PUT',
+  //       headers: { 
+  //         Authorization: `Bearer ${token}`
+  //       },
+  //       body: updatedArticle,
+  //     });
+
+  //     if(resUpd.ok) {
+  //       const fullArticle = await resUpd.json()
+  //       console.log(fullArticle);
+  //     }
+  // }
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      const hasEmptyFields = Object.values(values).some((element) => element === '');
-      if (hasEmptyFields) {
+    const hasEmptyFields = Object.values(values).some((element) => element === '');
+    if (hasEmptyFields) {
         toast.error("Please fill in all fields");
         return;
-      }
+    }
 
-      const articleData = {
+    // IMAGE UPLOAD
+
+    if (!file) {
+        console.error('No file selected');
+        return;
+    }
+
+    const imageFile = {
+        media: file,
+    }
+
+    const imageData = new FormData();
+    imageData.append('files', file);
+    imageData.append('ref', 'api::article.article');
+    imageData.append('field', 'media');
+    imageData.append('data', JSON.stringify(imageFile));
+
+    const responseImg = await fetch(`${API_URL}/upload`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        body: imageData,
+    });
+
+    if (responseImg.ok) {
+        const imageResponse = await responseImg.json();
+        console.log(imageResponse);
+        setFile(imageResponse)
+    }
+
+    // REST OF ARTICLE DATA
+    const articleData = {
         title: values.title,
         description: values.description,
         slug: slugify(values.title),
         associatedUser: userId,
         associatedUsername: username,
-      }
+        media: file,
+    }
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(articleData));
 
-      const formData = new FormData();
-      formData.append('data', JSON.stringify(articleData));
-
-      const res = await fetch(`${API_URL}/articles`, {
-        next: {tags: ['articles']},
+    const res = await fetch(`${API_URL}/articles`, {
+        next: { tags: ['articles'] },
         method: 'POST',
-        headers: { 
-          Authorization: `Bearer ${token}`
+        headers: {
+            Authorization: `Bearer ${token}`
         },
         body: formData
-      });
+    });
 
-      if (!res.ok) {
-        toast.error("Something went wrong, please try again");
-        if (res.status == 403) {
-          toast.error("You must be signed in to post articles");
-        }
-        if (res.status == 400) {
-          toast.error("An article with this title already exists");
-        }
-      } else {
+        if (!res.ok) {
+            toast.error("Something went wrong, please try again");
+            if (res.status == 403) {
+                toast.error("You must be signed in to post articles");
+            }
+            if (res.status == 400) {
+                toast.error("An article with this title already exists");
+            }
+        } 
         const article = await res.json();
-        router.push(`/articles/${article.data.id}`);
-      }
-  }
+        setArticle(article);
+        console.log('article', article)
 
-  // const imageUploaded = async (e) => {
-    
-  //   const res = await fetch(`${API_URL}/api/events?filters[id][$eq]=${event.id}&populate=*`)
-  //   const data = await res.json()
-  //   console.log(data)
+        // FINAL STAGE, APPEND IMAGE TO CREATED ARTICLE
+        const articleImageData = {
+            media: file,
+        }
 
-  //   setImagePreview(data.data[0].attributes.image.data.attributes.formats.thumbnail.url)
-  //   console.log(imagePreview)
-  //   setIsOpen(false)
-  // }
+        const updatedArticle = new FormData();
+
+        updatedArticle.append('files.media', file);
+        updatedArticle.append('refId', article.data.id);
+        updatedArticle.append('ref', 'api::article.article');
+        updatedArticle.append('field', 'media');
+        updatedArticle.append('data', JSON.stringify(articleImageData));
+
+        const resUpd = await fetch(`${API_URL}/articles/${article.data.id}`, {
+            next: { tags: ['articles'] },
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: updatedArticle,
+        });
+
+        if (resUpd.ok) {
+            const fullArticle = await resUpd.json()
+            console.log(fullArticle);
+        } else {
+          const fullArticle = await resUpd.json()
+          console.log(fullArticle);
+        }
+    // }
+}
 
   return (
     <div className="w-100 md:w-1/2 min-h-72 bg-blue-500 rounded-xl">
@@ -127,8 +293,7 @@ export default function CreateArticle() {
               />
             </div>
             <div>
-              {/* <input onChange={handleImageChange} className="bg-slate-900 h-4 p-4 rounded-lg" type="file" /> */}
-              {/* <ImageUpload imageUploaded={imageUploaded}/> */}
+              <input onChange={handleImage} className="bg-slate-900 h-4 p-4 rounded-lg" type="file" />
             </div>
           </div>
           <button className="bg-emerald-500 p-4 rounded-lg mt-5" onClick={handleSubmit} type="submit" value="submit">Submit</button>

@@ -19,6 +19,8 @@ export default function EditEvent({article}: {article: any}) {
 
     const { token, user } = useAuth();
 
+    console.log(user)
+
     const userRef = useRef<User | null>(null);
 
     const router = useRouter()
@@ -42,20 +44,18 @@ export default function EditEvent({article}: {article: any}) {
       
           if (!articleId) {
             router.push('/not-found');
-          }
-      
-          if (user?.id && user.id != articleData.associatedUser) {
+          } else if (user?.id && user.id != articleData.associatedUser) {
             router.push('/articles/not-user');
-          }
-      
-          if (!user) {
+          } else if (!user) {
             router.push('/articles/redirected');
           }
+        } else {
+            if(user === null) {
+                router.push('/articles/redirected');
+            }
         }
-      }, [user, articleId, router, articleData.associatedUser]);
+      }, [user]);
 
-    
-    
 
     const handleInputChange = (e: { target: { name: any; value: string; }; }) => {
 
@@ -146,7 +146,7 @@ export default function EditEvent({article}: {article: any}) {
   }
 
   return (
-    <div>
+    <div className="mt-2 p-5 shadow-2xl bg-gradient-to-r from-indigo-500 to-emerald-600 rounded-lg w-full md:w-1/2">
 
         <ToastContainer
             position="top-right"
