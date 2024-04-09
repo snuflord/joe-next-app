@@ -45,15 +45,27 @@ export default async function Page({ params }: { params: { id: string } }) {
                     </Markdown>
 
                     {json && json.data.attributes.media.data ? (
-                        <Image
-                            src={json.data.attributes.media.data[0].attributes.url}
-                            alt="API Image"
-                            width={560}
-                            height={620}
-                            className="block rounded-2xl mt-5 md:w-full"
-                            priority={true}
-                            placeholder="empty"
-                        />
+                        <>
+                            <Image
+                                src={json.data.attributes.media.data[0].attributes.url}
+                                alt="API Image"
+                                width={1200}
+                                height={675}
+                                className="hidden md:block rounded-2xl mt-5 md:w-full"
+                                priority={true}
+                                placeholder="empty"
+                            />
+                            <Image
+                                src={json.data.attributes.media.data[0].attributes.formats.medium.url}
+                                alt="API Image"
+                                width={1200}
+                                height={675}
+                                className="block md:hidden rounded-2xl mt-5 md:w-full"
+                                priority={true}
+                                placeholder="empty"
+                            />
+                        </>
+                        
                     ) : (
                         <Image
                             src={defaultImage}

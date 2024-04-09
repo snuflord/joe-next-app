@@ -1,5 +1,53 @@
 
 import { API_URL, NEXT_URL } from "../../../config";
+import QueryString from "qs";
+
+interface QueryParams {
+  term: string;
+}
+
+export async function getFilteredArticles({ query }: { query: QueryParams }) {
+  const { term } = query;
+
+  const queryString = QueryString.stringify(
+    {
+      filters: {
+        $or: [
+          {
+            name: {
+              $contains: term,
+            },
+          },
+          {
+            performers: {
+              $contains: term,
+            },
+          },
+          {
+            description: {
+              $contains: term,
+            },
+          },
+          {
+            venue: {
+              $contains: term,
+            },
+          },
+        ],
+      },
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+
+  const res = await fetch(`${API_URL}/articles?${queryString}&populate=*`);
+  const data = await res.json();
+
+  console.log(data);
+
+  return data;
+}
 
 
 export async function getArticles({

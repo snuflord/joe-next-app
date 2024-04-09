@@ -1,4 +1,4 @@
-import Search from "@/app/components/dashboard/search"
+import Search from "@/app/components/articles/search"
 
 export default function page() {
   return (

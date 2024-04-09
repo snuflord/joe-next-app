@@ -70,7 +70,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
   return (
     <div>
         <form onSubmit={handleSubmit}>
-            <input className='text-black block w-full md:w-1/3 rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500' type='text' value={term} onChange={(e) => setTerm(e.target.value)} placeholder='Search Events'/>
+            <input className='text-black block w-full md:w-1/3 rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500' type='text' value={term} onChange={(e) => setTerm(e.target.value)} placeholder='Search articles'/>
         </form>
         <button className='hover:text-blue-400 p-4 bg-emerald-500 mt-5 rounded-lg' onClick={handleSubmit} type="submit" value="Search">Search</button>
     </div>

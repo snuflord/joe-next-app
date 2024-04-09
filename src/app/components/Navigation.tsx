@@ -19,7 +19,7 @@ export default function Navigation() {
   }, [user]);
 
   const links = [
-    { name: 'Search', href: '/dashboard/search' },
+    { name: 'Search', href: '/articles/search' },
   ];
 
   return (

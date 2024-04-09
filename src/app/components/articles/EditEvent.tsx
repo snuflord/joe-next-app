@@ -2,9 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { API_URL } from "../../../../config";
-import Image from "next/image";
-
-import defaultImage from '@/public/tech_bg_next.jpeg'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,8 +16,6 @@ export default function EditEvent({article}: {article: any}) {
 
     const { token, user } = useAuth();
 
-    console.log(user)
-
     const userRef = useRef<User | null>(null);
 
     const router = useRouter()
@@ -32,10 +27,13 @@ export default function EditEvent({article}: {article: any}) {
     // console.log(articleData);
     // console.log(articleId)
 
+    const [file, setFile] = useState<File | undefined>();
+
     const [values, setValues] = useState({
         title: articleData.title,
         description: articleData.description,
-        slug: articleData.slug
+        slug: articleData.slug,
+        media: {},
     });
 
     useEffect(() => {
@@ -66,18 +64,25 @@ export default function EditEvent({article}: {article: any}) {
         setValues({...values, [name]: value})
     }
 
+    // setting file in initial state
+    function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
+      const file = e.target.files?.[0];
+      if (file) {
+        setFile(file);
+        console.log(file)
+      }
+    }
+
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
 
         e.preventDefault();
     
-        // Validation
-    
-        // the 'some' method looks through the elements and checks whether any of them have empty values. If any return empty values, they are 'hasEmptyFields'.
         const hasEmptyFields = Object.values(values).some((element) => element === '')
     
         if(hasEmptyFields ) {
-          
           console.log('empty fields')
+
+          toast.error('Please use all the fields')
         } 
     
         if(user == null || undefined) {
@@ -85,10 +90,67 @@ export default function EditEvent({article}: {article: any}) {
             return
         }
 
+        // IMAGE UPLOAD
+        if (!file) {
+          console.error('No file selected');
+          return;
+        }
+
+        // SEND NEW IMAGE TO STRAPI LIBRARY
+        const imageFile = {
+            media: file,
+        }
+
+        const imageData = new FormData();
+        imageData.append('files', file);
+        imageData.append('ref', 'api::article.article');
+        imageData.append('field', 'media');
+        imageData.append('data', JSON.stringify(imageFile));
+
+        const responseImg = await fetch(`${API_URL}/upload`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: imageData,
+        });
+
+        if (responseImg.ok) {
+            const imageResponse = await responseImg.json();
+            console.log(imageResponse);
+            // Update state 'file' with our image returned form this post to media library
+            setFile(imageResponse)
+        }
+
+
+        // The image we just set in state above is going to append to the media collection of this article. 
+        const newImage = {
+          media: file,
+        }
+        const updatedArticle = new FormData();
+
+        updatedArticle.append('files.media', file);
+        updatedArticle.append('refId', articleId);
+        updatedArticle.append('ref', 'api::article.article');
+        updatedArticle.append('field', 'media');
+        updatedArticle.append('data', JSON.stringify(newImage));
+
+        const resUpd = await fetch(`${API_URL}/articles/${articleId}`, {
+            next: { tags: ['articles'] },
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: updatedArticle,
+        });
+
+        console.log(resUpd)
+
+        // This is the rest of our non media data
         const updatedArticleData = {
-            title: values.title,
-            description: values.description,
-            slug: slugify(values.title),
+          title: values.title,
+          description: values.description,
+          slug: slugify(values.title),
         }
 
         const formData = new FormData()
@@ -118,8 +180,9 @@ export default function EditEvent({article}: {article: any}) {
         } else {
     
           const article = await res.json()
+          console.log(article)
 
-          router.push(`/articles/${article.data.id}`)
+          // router.push(`/articles/${article.data.id}`)
         }
     }
 
@@ -164,19 +227,22 @@ export default function EditEvent({article}: {article: any}) {
         <span className="font-bold underline text-2xl mb-5 inline-block">EDIT</span>
         <h2 className="text-3xl font-bold mb-5">{articleData.title}</h2>
         <div>
-            <form onSubmit={handleSubmit}> 
+            <form onSubmit={handleSubmit} className="space-y-4"> 
                 <div className="grid grid-cols-1 gap-4 mb-4">
                     <div className="flex flex-col">
                         <label className='font-bold mb-2' htmlFor='title'>Article Title</label>
-                        <input className="bg-slate-900 h-4 p-4 rounded-lg" type='text' id='title' name='title' value={values.title}
+                        <input className="bg-slate-900 h-14 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" type='text' id='title' name='title' value={values.title}
                             onChange={handleInputChange}
                         />
                     </div>
                     <div className="flex flex-col">
                         <label className='font-bold mb-2' htmlFor='description'>Description</label>
-                        <textarea className="bg-slate-900 h-4 p-4 rounded-lg min-h-32" name='description' id='description' value={values.description}
+                        <textarea className="bg-slate-900 h-14 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent min-h-32" name='description' id='description' value={values.description}
                             onChange={handleInputChange}
                         />
+                    </div>
+                    <div>
+                      <input onChange={handleImage} className="w-full bg-slate-900 h-14 p-4 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent appearance-none file:border-0 file:bg-transparent file:font-bold file:text-white" type="file" />
                     </div>
                     
                 </div>
@@ -186,9 +252,8 @@ export default function EditEvent({article}: {article: any}) {
                     <button className="bg-red-400 hover:bg-red-500 p-4  transition-all duration-300 rounded-lg md:min-w-24" onClick={deleteEvent}>DELETE</button>
                     <Link className="p-4 rounded-lg bg-white hover:bg-white/90 font-bold text-black md:min-w-24" href={`/articles/${articleId}`}>BACK</Link>
                 </div>
-
                 
-                   
+                
             </form>
         </div>
         
