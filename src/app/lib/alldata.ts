@@ -1,4 +1,5 @@
 
+import { error } from "console";
 import { API_URL, NEXT_URL } from "../../../config";
 import QueryString from "qs";
 
@@ -9,17 +10,12 @@ interface QueryParams {
 export async function getFilteredArticles({ query }: { query: QueryParams }) {
   const { term } = query;
 
-  const queryString = QueryString.stringify(
+  const thisQuery = QueryString.stringify(
     {
       filters: {
         $or: [
           {
-            name: {
-              $contains: term,
-            },
-          },
-          {
-            performers: {
+            title: {
               $contains: term,
             },
           },
@@ -29,7 +25,7 @@ export async function getFilteredArticles({ query }: { query: QueryParams }) {
             },
           },
           {
-            venue: {
+            associatedUsername: {
               $contains: term,
             },
           },
@@ -41,13 +37,19 @@ export async function getFilteredArticles({ query }: { query: QueryParams }) {
     }
   );
 
-  const res = await fetch(`${API_URL}/articles?${queryString}&populate=*`);
+  const res = await fetch(`${API_URL}/articles?${thisQuery}&populate=*`);
   const data = await res.json();
 
   console.log(data);
 
+  if (data.data.length === 0) {
+    console.log('No articles found')
+    return 
+  }
+
   return data;
 }
+
 
 
 export async function getArticles({

@@ -1,78 +1,80 @@
-// 'use client'; // This is a Client Component, which means you can use event listeners and hooks.
-
-// import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-// import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-// import { useDebouncedCallback } from 'use-debounce';
-
-// export default function Search({ placeholder }: { placeholder: string }) {
-
-
-//   const searchParams = useSearchParams();
-//   const {replace} = useRouter();
-//   const pathname = usePathname();
-
-//   // This function will wrap the contents of handleSearch, and only run the code after a specific time once the user has stopped typing (300ms).
-//   const handleSearch = useDebouncedCallback((term) => {
-
-//     console.log(`Searching...${term}`)
-
-
-//     const params = new URLSearchParams(searchParams);
-
-//     params.set('page', '1');
-
-//     // https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
-//     if(term) {
-
-//       // setting the value of the query to the input term
-//       params.set('query', term);
-//     } else {
-//       params.delete('query');
-//     }
-//     // replace(${pathname}?${params.toString()}) updates the URL with the user's search data. For example, /dashboard/invoices?query=tobe if the user searches for "Tobe".
-//     replace(`${pathname}?${params.toString()}`);
-//   }, 300);
-
-  
-//   return (
-//     <div className="relative flex flex-1 flex-shrink-0">
-//       <label htmlFor="search" className="sr-only">
-//         Search
-//       </label>
-//       <input
-//         className="peer text-black block w-full md:w-1/3 rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500" 
-//         placeholder={placeholder} onChange={(e) => {handleSearch(e.target.value)}}
-//         defaultValue={searchParams.get('query')?.toString()}/>
-
-//       <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-blue-500 peer-focus:text-emerald-500" />
-//     </div>
-//   );
-// }
-
 'use client'
 
-
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-
+import { getFilteredArticles } from '@/app/lib/alldata'
+import { Key, Suspense } from 'react'
+import { CardSkeleton } from '@/app/ui/skeletons'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Search({ placeholder }: { placeholder: string }) {
 
     const [term, setTerm] = useState('')
-    const router = useRouter()
+    const [articles, setArticles] = useState([])
+    
 
-    const handleSubmit = (e: { preventDefault: () => void }) => {
-        e.preventDefault();
-        router.push(`/events/search?term=${term}`)
-        setTerm('')
-    }
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+  
+      if (term.trim().length === 0) {
+          toast.error('You need to enter a search term');
+          return;
+      }
+  
+      try {
+          const json = await getFilteredArticles({ query: { term } });
+  
+          if (json.data.length > 0) {
+              setArticles(json.data);
+              setTerm('');
+          } else {
+              toast.error('No articles found!');
+          }
+      } catch (error) {
+          console.error('Error fetching articles:', error);
+          toast.error('There are no articles that match your search term :(');
+      }
+  };
 
-  return (
-    <div>
-        <form onSubmit={handleSubmit}>
-            <input className='text-black block w-full md:w-1/3 rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500' type='text' value={term} onChange={(e) => setTerm(e.target.value)} placeholder='Search articles'/>
-        </form>
-        <button className='hover:text-blue-400 p-4 bg-emerald-500 mt-5 rounded-lg' onClick={handleSubmit} type="submit" value="Search">Search</button>
-    </div>
-  )
+    return (
+        <div>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+            <form className='relative' onSubmit={handleSubmit}>
+                <input className='text-black block text-1xl w-full md:w-1/3 rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500' type='text' value={term} onChange={(e) => setTerm(e.target.value)} placeholder='Search articles' />
+
+                <MagnifyingGlassIcon className="absolute font-bold -translate-y-7 left-3 h-[18px] w-[18px] text-blue-500 peer-focus:text-red-500" />
+
+                <button className='p-4 bg-emerald-500 mt-5 rounded-lg' type="submit">Search</button>
+            </form>
+
+            <div>
+
+            <div className="grid grid-cols-1 grid-rows-2 md:grid-cols-2 w-full md:w-2/3 gap-3 my-2">
+            {articles ? articles.map((article: { id: Key | null | undefined; attributes: any }) => (
+
+                              
+                <Suspense key={article.id} fallback={<CardSkeleton/>}>
+                  <span className='bg-slate-700 p-5 rounded-lg my-2 inline-block'>{article.attributes.title}</span>
+                </Suspense>
+
+                )) : 
+                <p>No articles!</p>
+                }
+            </div>
+            
+            </div>
+        </div>
+    )
 }

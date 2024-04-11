@@ -39,8 +39,7 @@ export async function POST(req, res) {
 
     } else {
         
-        // console.log(`register failed response: ${data.error.message}`)
-
+        console.log(`register failed response: ${data.error.message}`)
         return NextResponse.json(data)
     }
 }

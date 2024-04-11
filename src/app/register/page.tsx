@@ -19,16 +19,12 @@ export default function RegisterPage() {
         }
     }, [error]);
 
-    console.log('hello')
-
     const [values, setValues] = useState({
         username: '',
         email: '',
         password: '',
         passwordConfirm: '',
     });
-
-    // console.log(values)
 
     const handleInputChange = (e: { target: { name: any; value: string; }; }) => {
 

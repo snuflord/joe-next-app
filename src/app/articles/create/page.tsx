@@ -165,7 +165,7 @@ export default function CreateArticle() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        theme="light"
       />
 
       <div className="p-2 md:p-6">
@@ -190,7 +190,7 @@ export default function CreateArticle() {
 
             </div>
           </div>
-          <button className="bg-emerald-500 p-4 rounded-lg mt-5 hover:bg-emerald-600 transition-colors duration-300 ease-in-out" onClick={handleSubmit} type="submit" value="submit">Submit</button>
+          <button className="bg-emerald-500 p-4 rounded-lg mt-5 hover:bg-emerald-600 transition-colors duration-300 ease-in-out" onClick={handleSubmit} type="submit" value="submit">Create</button>
         </form>
       </div>
     </div>

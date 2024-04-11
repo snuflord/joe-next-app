@@ -29,7 +29,7 @@ function EditButton({ article }: EditButtonProps) {
         <AuthProvider>
             { userId && userId == articleUserId ? <div className="flex">
                             <Link className="flex mt-3 items-center bg-emerald-500 hover:bg-emerald-400 p-3 rounded-lg transition-all duration-300" href={`/articles/edit/${articleID}`}>
-                                <FaPencilAlt className="mr-3"/> Edit Event
+                                <FaPencilAlt className="mr-3"/> Edit Post
                             </Link>
                         </div>: <></>}    
         </AuthProvider>

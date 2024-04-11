@@ -124,17 +124,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         const data = await res.json();
         // console.log(`Auth context registerUser data is: ${data}`);
-        console.log(data)
+        // console.log(data)
 
-        if (res.ok) {
+        if (res.ok && data.data !== null) {
 
             setUser(data);
             setIsAuthenticated(true);
-            redirect('/dashboard');
+            router.push('/dashboard')
 
         } else {
             const errorMessage = data.error.message;
             setError(errorMessage);
+            console.log(errorMessage);
         }
     } catch (error) {
         

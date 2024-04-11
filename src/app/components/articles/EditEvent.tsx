@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { API_URL } from "../../../../config";
-
+import Image from "next/image";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useRef, useEffect } from "react";
@@ -23,17 +23,17 @@ export default function EditEvent({article}: {article: any}) {
     const articleData = article.data.attributes
     const articleId = article.data.id
 
+    console.log(articleData)
 
-    // console.log(articleData);
-    // console.log(articleId)
-
-    const [file, setFile] = useState<File | undefined>();
+    const [file, setFile] = useState<File | undefined>(
+      articleData.media.data[0]
+    );
 
     const [values, setValues] = useState({
         title: articleData.title,
         description: articleData.description,
         slug: articleData.slug,
-        media: {},
+        media: articleData.media.data[0],
     });
 
     useEffect(() => {
@@ -155,8 +155,7 @@ export default function EditEvent({article}: {article: any}) {
 
         const formData = new FormData()
     
-        formData.append('data', JSON.stringify(updatedArticleData))
-
+        formData.append('data', JSON.stringify(updatedArticleData));
     
         const res = await fetch(`${API_URL}/articles/${articleId}`, {
           method: 'PUT',
@@ -169,20 +168,19 @@ export default function EditEvent({article}: {article: any}) {
 
         
         if(!res.ok) {
-        //   if(res.status === 403 || res.status === 401 ) {
-        //     toast.error("No token included")
-        //     return
-        //   }
-        //   toast.error("Something went wrong")
-
-        console.log('something went wrong - cannot post yet')
-        
+          if(res.status === 403 || res.status === 401 ) {
+            toast.error("No token included - make sure you're logged in")
+            return
+          }
+          toast.error("Something went wrong")
+          return
+          
         } else {
     
           const article = await res.json()
           console.log(article)
 
-          // router.push(`/articles/${article.data.id}`)
+          router.push(`/articles/${article.data.id}`)
         }
     }
 
@@ -209,7 +207,7 @@ export default function EditEvent({article}: {article: any}) {
   }
 
   return (
-    <div className="mt-2 p-5 shadow-2xl bg-gradient-to-r from-indigo-500 to-emerald-600 rounded-lg w-full md:w-1/2">
+    <div className="mt-2 p-5 shadow-2xl bg-gradient-to-r from-indigo-500 to-emerald-600 rounded-lg w-full md:w-3/4">
 
         <ToastContainer
             position="top-right"
@@ -221,7 +219,7 @@ export default function EditEvent({article}: {article: any}) {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="dark"
+            theme="light"
         />
 
         <span className="font-bold underline text-2xl mb-5 inline-block">EDIT</span>
@@ -237,12 +235,32 @@ export default function EditEvent({article}: {article: any}) {
                     </div>
                     <div className="flex flex-col">
                         <label className='font-bold mb-2' htmlFor='description'>Description</label>
-                        <textarea className="bg-slate-900 h-14 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent min-h-32" name='description' id='description' value={values.description}
+                        <textarea className="bg-slate-900 h-14 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent min-h-60" name='description' id='description' value={values.description}
                             onChange={handleInputChange}
                         />
                     </div>
-                    <div>
-                      <input onChange={handleImage} className="w-full bg-slate-900 h-14 p-4 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent appearance-none file:border-0 file:bg-transparent file:font-bold file:text-white" type="file" />
+
+                    {file && (
+                      <div className="flex flex-col">
+                          <label className='font-bold mb-2' htmlFor='description'>Current Image</label>
+                          <div className="">
+                          <Image
+                                  src={file.attributes.url}
+                                  alt="API Image"
+                                  width={1200}
+                                  height={675}
+                                  className="hidden md:block rounded-2xl md:w-1/3"
+                                  priority={true}
+                                  placeholder="empty"
+                              />
+                          </div>
+                      </div>
+                      
+                    )}
+                    <div className="flex flex-col">
+                      <label className='font-bold mb-2' htmlFor='description'>New Image</label>
+                      <input onChange={handleImage} className="w-1/3 overflow-hidden bg-slate-900 h-14 p-4 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent appearance-none file:border-0 file:bg-transparent file:font-bold file:text-white" type="file" />
+                      
                     </div>
                     
                 </div>

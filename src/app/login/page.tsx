@@ -37,8 +37,7 @@ export default function LoginPage() {
         const hasEmptyFields = Object.values(values).some((element) => element === '')
   
         if(hasEmptyFields) {
-            
-            console.log('empty fields')
+        
             toast.error("Empty fields!")
             return
         } 
@@ -50,7 +49,6 @@ export default function LoginPage() {
             };
 
             loginUser(user)
-            // router.push('/dashboard')
         }
     }
     
