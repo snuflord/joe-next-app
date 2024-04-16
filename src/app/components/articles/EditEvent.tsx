@@ -23,9 +23,11 @@ export default function EditEvent({article}: {article: any}) {
     const articleData = article.data.attributes
     const articleId = article.data.id
 
-    console.log(articleData)
-
     const [file, setFile] = useState<File | undefined>(
+      articleData.media.data[0]
+    );
+    // This is the image that was already set in creating post - it appears in the image preview - it is not updated on any changing events. 
+    const [holderImg, setHolderImg] = useState<{ attributes: { url: string } } | undefined>(
       articleData.media.data[0]
     );
 
@@ -59,7 +61,6 @@ export default function EditEvent({article}: {article: any}) {
 
         // the 'name' property in each input allows state to be changed with one function.
         const {name, value} = e.target
-
         // spread operator across values, update state with the value of target.
         setValues({...values, [name]: value})
     }
@@ -235,17 +236,17 @@ export default function EditEvent({article}: {article: any}) {
                     </div>
                     <div className="flex flex-col">
                         <label className='font-bold mb-2' htmlFor='description'>Description</label>
-                        <textarea className="bg-slate-900 h-14 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent min-h-60" name='description' id='description' value={values.description}
+                        <textarea className="bg-slate-900 h-14 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent min-h-96" name='description' id='description' value={values.description}
                             onChange={handleInputChange}
                         />
                     </div>
 
-                    {file && (
+                    {holderImg && (
                       <div className="flex flex-col">
                           <label className='font-bold mb-2' htmlFor='description'>Current Image</label>
                           <div className="">
                           <Image
-                                  src={file.attributes.url}
+                                  src={holderImg?.attributes.url}
                                   alt="API Image"
                                   width={1200}
                                   height={675}

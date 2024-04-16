@@ -153,7 +153,7 @@ export default function CreateArticle() {
 }
 
   return (
-      <div className="w-100 md:w-1/2 min-h-72 bg-blue-500 rounded-xl">
+      <div className="w-100 md:w-1/2 min-h-72 bg-blue-500 rounded-xl container mx-auto">
         
       <ToastContainer
         position="top-right"

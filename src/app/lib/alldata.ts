@@ -3,10 +3,10 @@ import { error } from "console";
 import { API_URL, NEXT_URL } from "../../../config";
 import QueryString from "qs";
 
+// Queried articles
 interface QueryParams {
-  term: string;
+  term: string
 }
-
 export async function getFilteredArticles({ query }: { query: QueryParams }) {
   const { term } = query;
 
@@ -50,24 +50,31 @@ export async function getFilteredArticles({ query }: { query: QueryParams }) {
   return data;
 }
 
+// latest articles
+export async function getLatestArticles() {
+  const res = await fetch(`${API_URL}/articles?populate=*&pagination[limit]=5&sort[0]=createdAt:desc
+  `, {cache: 'no-store' }
+  )
+
+  if(!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
+
+  const json = await res.json()
+  console.log(json.data)
+  return json.data
+}
 
 
-export async function getArticles({
-    query,
-    page = 1,
-    limit = 10
-  }: {
-    query?: string
-    page: number
-    limit: number
-  }) {
+// all articles (paginated)
 
-    const res = await fetch(`${API_URL}/articles/?[populate]=*&pagination[limit]=12&[pagesize]=3&pagination[start]=0`,
+export async function getArticles({ page }: { page: number }) {
+
+    const res = await fetch(`${API_URL}/articles/?pagination[page]=${page}&pagination[pageSize]=9&sort[0]=createdAt:desc&[populate]=*`,
       {cache: 'no-store' },
     )
 
     if (!res.ok) {
-      // This will activate the closest `error.js` Error Boundary
       throw new Error('Failed to fetch data')
     }
    
@@ -76,6 +83,7 @@ export async function getArticles({
     return json.data;
 }
 
+// single article
 export async function getArticle(id: string, revalidate = false) {
   const baseURL =
     process.env.NODE_ENV === "development"
@@ -105,6 +113,7 @@ export async function getArticle(id: string, revalidate = false) {
   return json;
 }
 
+// user articles
 export async function getUserArticles(id: string) {
   try {
     

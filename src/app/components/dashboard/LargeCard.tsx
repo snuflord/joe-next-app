@@ -32,7 +32,7 @@ export default function LargeCard() {
   }, []); // Empty dependency array ensures the effect runs only once on component mount
 
   return (
-    <div className="shadow-2xl bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-96 rounded-lg p-4 my-4 overflow-hidden">
+    <div className="shadow-2xl bg-gradient-to-r from-indigo-500 to-emerald-600 w-full h-full rounded-lg p-4 my-4 overflow-hidden">
       {user ? <span className="block font-bold text-3xl mb-3">Hello, {user.username}!</span> : <></>}
       <span className="font-bold mb-5 inline-block">The current time is {date}</span>
 
