@@ -37,7 +37,7 @@ export default function Navigation() {
           <Link href='/dashboard' className="dark:border-neutral-800 rounded-lg dark:bg-zinc-800/30 dark:from-inherit lg:rounded-xl p-4">
             <code className="font-mono font-bold">DASHBOARD</code>
           </Link>
-          {currentUser ? <span className="bg-blue-500 md:bg-transparent p-4 rounded-lg font-bold underline underline-offset-4 ml-2">Hello, {currentUser.username}!</span> : <span className="font-bold underline underline-offset-4 ml-2">No user</span>}
+          {currentUser ? <Link href={`/dashboard/account`} className="bg-blue-500 md:bg-transparent p-4 rounded-lg font-bold underline underline-offset-4 ml-2">Hello, {currentUser.username}!</Link> : <span className="font-bold underline underline-offset-4 ml-2">No user</span>}
         </div>
         <div className="w-full my-3 md:my-0 md:w-auto space-y-3 md:space-y-0 md:space-x-3 group flex flex-col md:flex-row justify-start">
           {currentUser ? <Link

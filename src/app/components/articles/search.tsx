@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { getFilteredArticles } from '@/app/lib/alldata'
 import { Key, Suspense } from 'react'
 import { CardSkeleton } from '@/app/ui/skeletons'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { SearchCard } from '../dashboard/Cards'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaSearch } from "react-icons/fa";
 
-export default function Search({ placeholder }: { placeholder: string }) {
+export default function Search() {
 
     const [term, setTerm] = useState('')
     const [articles, setArticles] = useState([])
@@ -17,6 +18,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
   
+      // trim method removes whitespace
       if (term.trim().length === 0) {
           toast.error('You need to enter a search term');
           return;
@@ -52,21 +54,21 @@ export default function Search({ placeholder }: { placeholder: string }) {
               theme="light"
             />
             <form className='relative' onSubmit={handleSubmit}>
-                <input className='text-black block text-1xl w-full md:w-1/3 rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500' type='text' value={term} onChange={(e) => setTerm(e.target.value)} placeholder='Search articles' />
+                <input className='peer text-black block text-xl font-bold w-full pl-10  rounded-md border border-gray-200 py-4 px-6 outline-none placeholder-gray-500 ' type='text' value={term} onChange={(e) => setTerm(e.target.value)} placeholder='Search articles' />
 
-                <MagnifyingGlassIcon className="absolute font-bold -translate-y-7 left-3 h-[18px] w-[18px] text-blue-500 peer-focus:text-red-500" />
+                <FaSearch className="absolute font-bold text-3xl -translate-y-10 left-3 h-[18px] w-[18px] text-indigo-500 peer-focus:text-emerald-500" />
 
                 <button className='p-4 bg-emerald-500 mt-5 rounded-lg' type="submit">Search</button>
             </form>
 
             <div>
 
-            <div className="grid grid-cols-1 grid-rows-2 md:grid-cols-2 w-full md:w-2/3 gap-3 my-2">
+            <div className="grid grid-cols-1 auto-rows-auto md:grid-cols-3 w-full gap-3 my-5">
             {articles ? articles.map((article: { id: Key | null | undefined; attributes: any }) => (
 
                               
                 <Suspense key={article.id} fallback={<CardSkeleton/>}>
-                  <span className='bg-slate-700 p-5 rounded-lg my-2 inline-block'>{article.attributes.title}</span>
+                  <SearchCard key={article.id} article={article}/>
                 </Suspense>
 
                 )) : 

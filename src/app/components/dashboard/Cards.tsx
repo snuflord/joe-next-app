@@ -77,3 +77,51 @@ export function SideCard({article}: {article: any}) {
         </Link>
     )
 }
+
+export function SearchCard({article}: {article: any}) {
+
+    const data = article;
+
+    const truncatedDescription =
+    data.attributes.description.length > 100
+      ? `${data.attributes.description.substring(0, 100)}...`
+      : data.attributes.description;
+
+    return (
+        <Link href={`/articles/${data.id}`} className="transition-colors duration-300 bg-indigo-900 rounded-lg p-3 md:p-5 min-h-30 hover:bg-indigo-950">
+
+            <div className="flex space-x-3">
+                <div className="w-1/2">
+                    <h3 className="font-bold mb-2">{data.attributes.title}</h3>
+                    <Markdown className="">{truncatedDescription}</Markdown>
+                </div>
+
+                {data && data.attributes.media.data ? (
+                <div className="h-full w-1/2">
+                    <Image
+                        src={data.attributes.media.data[0].attributes.url}
+                        alt="API Image"
+                        width={1200}
+                        height={675}
+                        className="rounded-lg md:w-full aspect-square object-cover"
+                        priority={true}
+                        placeholder="empty"
+                    />
+                </div>
+            ) : (
+                <div className="h-full w-1/2">
+                    <Image
+                        src={defaultImage}
+                        alt="Default Image"
+                        width={560}
+                        height={620}
+                        className="block rounded-lg md:w-full aspect-square object-cover"
+                        priority={true}
+                        placeholder="empty"
+                    />
+                </div>
+            )}
+            </div>
+        </Link>
+    )
+}

@@ -33,6 +33,7 @@ interface AuthContextType {
     registerUser: (user: any) => Promise<void>;
     loginUser: (user: any) => Promise<void>; // Specify login credentials types
     logoutUser: () => Promise<void>; // Add logoutUser function type
+    deleteUser: (user: any) => Promise<void>;
 }
 
 // Create the authentication context
@@ -57,7 +58,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const checkUserLoggedIn = async () => {
+const checkUserLoggedIn = async () => {
     try {
       const res = await fetch(`${NEXT_URL}/api/checkUserLoggedIn`);
       const data = await res.json();
@@ -98,7 +99,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 };
 
 
-  const registerUser = async (user: { username: string; identifier: string; password: string }) => {
+const registerUser = async (user: { username: string; identifier: string; password: string }) => {
     try {
         
         // console.log(`user is ${user.username}, email is ${user.identifier}, password is ${user.password}`);
@@ -142,6 +143,52 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         console.error('Error in registerUser:', error);
     }
 };
+
+
+const deleteUser = async( user: {userId: string; token: string}) => {
+  try {
+        
+    // console.log(`user is ${user.username}, email is ${user.identifier}, password is ${user.password}`);
+
+    const res = await fetch(`${NEXT_URL}/api/deleteUser`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: user.userId,
+            token: user.token,
+        }),
+    });
+
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        // The response is not JSON, handle accordingly
+        console.error('Unexpected content type:', contentType);
+        return;
+    }
+
+    const data = await res.json();
+    // console.log(`Auth context deleteUser data is: ${data}`);
+    // console.log(data)
+
+      if (res.ok) {
+
+          setUser(null);
+          setIsAuthenticated(false);
+          console.log('user deleted')
+          router.push('/dashboard')
+
+      } else {
+          const errorMessage = data.error.message;
+          setError(errorMessage);
+          console.log(errorMessage);
+      }
+    } catch (error) {
+        
+        console.error('Error in registerUser:', error);
+    }
+}
 
 const loginUser = async (user: { identifier: string; password: string }) => {
   try {
@@ -207,6 +254,7 @@ const loginUser = async (user: { identifier: string; password: string }) => {
     registerUser,
     loginUser,
     logoutUser,
+    deleteUser
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

@@ -15,6 +15,7 @@ export default function LargeCard() {
       if (user) {
         try {
           const json = await getUserArticles(user.id);
+          
           setArticles(json.data);
 
         } catch (error) {

@@ -21,7 +21,7 @@ export async function GET() {
 
   if (strapiRes.ok) { 
 
-    console.log(user)
+    // console.log(user)
     return NextResponse.json(user)
 
   } else {

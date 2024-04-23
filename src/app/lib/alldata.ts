@@ -61,26 +61,28 @@ export async function getLatestArticles() {
   }
 
   const json = await res.json()
-  console.log(json.data)
+  
   return json.data
 }
 
 
 // all articles (paginated)
 
-export async function getArticles({ page }: { page: number }) {
+export async function getArticles({ page }: { page?: number | undefined }) {
+  const pageNumber = page !== undefined ? page : '1'; // Use page value if provided, otherwise default to 1
 
-    const res = await fetch(`${API_URL}/articles/?pagination[page]=${page}&pagination[pageSize]=9&sort[0]=createdAt:desc&[populate]=*`,
-      {cache: 'no-store' },
-    )
+  const res = await fetch(
+    `${API_URL}/articles/?pagination[page]=${pageNumber}&pagination[pageSize]=9&sort[0]=createdAt:desc&[populate]=*`,
+    { cache: 'no-store' }
+  );
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch data')
-    }
-   
-    const json = await res.json();
-    
-    return json.data;
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  const data = await res.json();
+
+  return data;
 }
 
 // single article
