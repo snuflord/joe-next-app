@@ -33,7 +33,7 @@ export default function UsersCards() {
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
     };
-
+    
     const handlePrevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
@@ -44,10 +44,12 @@ export default function UsersCards() {
     return (
         <div className="w-full flex flex-col md:flex-col-reverse">
 
-        <div className="flex py-4 w-full items-center justify-center space-x-5">
+
+        <div className="flex py-4 w-full items-center justify-end space-x-5">
             <button className={clsx("rounded-lg p-4 bg-emerald-500 hover:bg-emerald-600 font-bold", {"bg-gray-900 hover:bg-gray-900": currentPage === 1})} onClick={handlePrevPage} disabled={currentPage === 1}>Prev Page</button>
-            <button className="rounded-lg p-4 bg-emerald-500 hover:bg-emerald-600 font-bold" onClick={handleNextPage}>Next Page</button>
+            <button className={clsx("rounded-lg p-4 bg-emerald-500 hover:bg-emerald-600 font-bold", {"bg-gray-900 hover:bg-gray-900": articlesList.length < 4})} onClick={handleNextPage} disabled={articlesList.length < 4}>Next Page</button>
         </div>
+        
 
         {loading ? (
             <div>Loading...</div>
@@ -64,6 +66,7 @@ export default function UsersCards() {
                 <span className="font-bold">No items found !!</span>
             </div>
         )}
+
     </div>
     );
 }

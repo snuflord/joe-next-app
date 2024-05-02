@@ -44,10 +44,11 @@ export default function AccountCard() {
     return (
         <div className="mt-2 p-5 shadow-2xl bg-gradient-to-r min-h-[50vh] from-indigo-500 to-emerald-600 rounded-lg w-full md:w-3/4">
             <div className="flex flex-col space-y-3">
-                <h3 className="font-bold text-1xl md:text-2xl">Username: {thisUser?.username}</h3>
+                <h3 className="font-bold text-1xl md:text-3xl">Username: {thisUser?.username}</h3>
                 {/* <span className="text-1xl md:text-2xl">Account created on {new Date(thisUser?.createdAt).toLocaleDateString("en-UK")}</span> */}
-                <span>User ID: {thisUser?.id}</span>
+                <span className="text-1xl md:text-2xl">User ID: {thisUser?.id}</span>
                 <span className="text-1xl md:text-2xl">Email: {thisUser?.email}</span>
+                <span className="text-1xl md:text-2xl font-bold">My Posts:</span>
             </div>
             <UsersCards />
 

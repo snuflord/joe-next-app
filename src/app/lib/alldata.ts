@@ -1,5 +1,4 @@
-
-import { error } from "console";
+// API FUNCTIONS
 import { API_URL, NEXT_URL } from "../../../config";
 import QueryString from "qs";
 
@@ -67,7 +66,6 @@ export async function getLatestArticles() {
 
 
 // all articles (paginated)
-
 export async function getArticles({ page }: { page?: number | undefined }) {
   const pageNumber = page !== undefined ? page : '1'; // Use page value if provided, otherwise default to 1
 
@@ -160,28 +158,4 @@ export async function getAllUserArticles(id: string, { page }: { page?: number |
 
   return data;
 }
-
-// export async function getAllUserArticles(id: string) {
-//   try {
-    
-//     const response = await fetch(`${API_URL}/articles?&pagination[limit]=6&filters[associatedUser][$eq]=${id}`, {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       cache: 'no-store', 
-//     });
-
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch articles');
-//     }
-
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-  
-//     console.error('Error fetching articles:', error);
-//     throw error; 
-//   }
-// }
 
