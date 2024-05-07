@@ -1,5 +1,4 @@
 import Navigation from "../components/Navigation"
-import Footer from "../components/Footer"
 import { AuthProvider } from "../../../context/AuthContext"
 
 export default function Layout ({ children }: { children: React.ReactNode }) {
@@ -17,8 +16,7 @@ export default function Layout ({ children }: { children: React.ReactNode }) {
           </AuthProvider>
         
         </main>
-        
-        <Footer />
+
       </>
         
     )

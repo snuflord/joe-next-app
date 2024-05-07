@@ -39,7 +39,7 @@ export async function getFilteredArticles({ query }: { query: QueryParams }) {
   const res = await fetch(`${API_URL}/articles?${thisQuery}&populate=*`);
   const data = await res.json();
 
-  console.log(data);
+  // console.log(data);
 
   if (data.data.length === 0) {
     console.log('No articles found')
@@ -63,7 +63,6 @@ export async function getLatestArticles() {
   
   return json.data
 }
-
 
 // all articles (paginated)
 export async function getArticles({ page }: { page?: number | undefined }) {

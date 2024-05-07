@@ -63,7 +63,7 @@ export default function Search() {
 
             <div>
 
-            <div className="grid grid-cols-1 auto-rows-auto md:grid-cols-3 w-full gap-3 my-5">
+            <div className="grid grid-cols-1 auto-rows-auto md:grid-cols-3 w-full gap-2 md:gap-3 my-5">
             {articles ? articles.map((article: { id: Key | null | undefined; attributes: any }) => (
 
                               

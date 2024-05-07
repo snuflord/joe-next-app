@@ -1,14 +1,13 @@
 ::-webkit-scrollbar {
     width: 1rem;
-    background: slate;
+    background: black;
 }
 ::-webkit-scrollbar-track {
     width: 1rem;
-    background: slate;
+    background: black;
 }
 ::-webkit-scrollbar-thumb {
     width: 1rem;
     background: rgb(2,0,36);
     background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,121,120,1) 100%);
-    border-radius: 50px
 }

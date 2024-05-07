@@ -15,16 +15,16 @@ export function Card({article}: {article: any}) {
       : data.attributes.description;
 
     return (
-        <Link href={`/articles/${data.id}`} className="group transition duration-300 bg-slate-800 rounded-lg p-4 hover:bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-32 h-full">
+        <Link href={`/articles/${data.id}`} className="group transition duration-300 bg-slate-800 rounded-lg p-4 hover:bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-32 h-full flex flex-col">
 
-            <div className="flex justify-between">
-                <h3 className="font-bold mb-2 max-w-[70%]">{data.attributes.title}</h3>
-                <span className="font-bold underline-offset-2 text-emerald-500 group-hover:text-white group-hover:underline">Author: {data.attributes.associatedUsername}</span>
+            <div className="flex flex-col md:flex-row justify-between">
+                <h3 className="text-xs md:text-base font-bold mb-2 w-full md:max-w-[60%]">{data.attributes.title}</h3>
+                <span className="text-xs md:text-base mb-2 font-bold underline-offset-2 text-emerald-500 group-hover:text-white group-hover:underline">Author: {data.attributes.associatedUsername}</span>
             </div>
             
-            <Markdown>{truncatedDescription}</Markdown>
+            <Markdown className="text-xs md:text-base mb-2">{truncatedDescription}</Markdown>
 
-            <span className="text-sm font-bold mt-auto">Updated: {new Date(data.attributes.updatedAt).toLocaleDateString("en-UK")}</span>
+            <span className="text-xs md:text-sm font-bold mt-auto">Updated: {new Date(data.attributes.updatedAt).toLocaleDateString("en-UK")}</span>
             
         </Link>
     )
@@ -93,7 +93,7 @@ export function SearchCard({article}: {article: any}) {
             <div className="flex space-x-3">
                 <div className="w-1/2">
                     <h3 className="font-bold mb-2">{data.attributes.title}</h3>
-                    <Markdown className="">{truncatedDescription}</Markdown>
+                    <Markdown className="text-xs md:text-base">{truncatedDescription}</Markdown>
                 </div>
 
                 {data && data.attributes.media.data ? (

@@ -44,28 +44,26 @@ export default function UsersCards() {
     return (
         <div className="w-full flex flex-col md:flex-col-reverse">
 
-
-        <div className="flex py-4 w-full items-center justify-end space-x-5">
-            <button className={clsx("rounded-lg p-4 bg-emerald-500 hover:bg-emerald-600 font-bold", {"bg-gray-900 hover:bg-gray-900": currentPage === 1})} onClick={handlePrevPage} disabled={currentPage === 1}>Prev Page</button>
-            <button className={clsx("rounded-lg p-4 bg-emerald-500 hover:bg-emerald-600 font-bold", {"bg-gray-900 hover:bg-gray-900": articlesList.length < 4})} onClick={handleNextPage} disabled={articlesList.length < 4}>Next Page</button>
-        </div>
-        
-
-        {loading ? (
-            <div>Loading...</div>
-        ) : articlesList && articlesList.length > 0 ? (
-            <div className="grid grid-rows-1 grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-6 w-full my-4">
-                {articlesList.map((article: { id: Key | null | undefined; attributes: any }) => (
-                    <Suspense key={article.id} fallback={<CardSkeleton/>}>
-                        <Card key={article.id} article={article}/>
-                    </Suspense>
-                ))}
+            <div className="flex py-2 mt-2 md:py-4 w-full items-center justify-start md:justify-end space-x-5">
+                <button className={clsx("rounded-lg p-2 md:p-4 bg-emerald-500 hover:bg-emerald-600 font-bold", {"bg-gray-900 hover:bg-gray-900": currentPage === 1})} onClick={handlePrevPage} disabled={currentPage === 1}>Prev Page</button>
+                <button className={clsx("rounded-lg p-2 md:p-4 bg-emerald-500 hover:bg-emerald-600 font-bold", {"bg-gray-900 hover:bg-gray-900": articlesList.length < 4})} onClick={handleNextPage} disabled={articlesList.length < 4}>Next Page</button>
             </div>
-        ) : (
-            <div className="bg-slate-800 rounded-lg p-4 hover:bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-32 h-full">
-                <span className="font-bold">No items found !!</span>
-            </div>
-        )}
+
+            {loading ? (
+                <div>Loading...</div>
+            ) : articlesList && articlesList.length > 0 ? (
+                <div className="grid grid-rows-1 grid-cols-2 md:grid-rows-2 gap-2 md:gap-6 w-full my-4">
+                    {articlesList.map((article: { id: Key | null | undefined; attributes: any }) => (
+                        <Suspense key={article.id} fallback={<CardSkeleton/>}>
+                            <Card key={article.id} article={article}/>
+                        </Suspense>
+                    ))}
+                </div>
+            ) : (
+                <div className="bg-slate-800 rounded-lg p-4 hover:bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-32 h-full">
+                    <span className="font-bold">No items found !!</span>
+                </div>
+            )}
 
     </div>
     );
