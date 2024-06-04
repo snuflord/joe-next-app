@@ -59,14 +59,14 @@ export default function EditEvent({article}: {article: any}) {
 
     const handleInputChange = (e: { target: { name: any; value: string; }; }) => {
 
-        // the 'name' property in each input allows state to be changed with one function.
-        const {name, value} = e.target
-        // spread operator across values, update state with the value of target.
-        setValues({...values, [name]: value})
+      // the 'name' property in each input allows state to be changed with one function.
+      const {name, value} = e.target
+      // spread operator across values, update state with the value of target.
+      setValues({...values, [name]: value})
     }
 
     // setting file in initial state
-    function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const  handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) {
         setFile(file);
@@ -94,6 +94,7 @@ export default function EditEvent({article}: {article: any}) {
         // IMAGE UPLOAD
         if (!file) {
           console.error('No file selected');
+          toast.error('Please include an image for your article');
           return;
         }
 
@@ -180,7 +181,6 @@ export default function EditEvent({article}: {article: any}) {
     
           const article = await res.json()
           console.log(article)
-
           router.push(`/articles/${article.data.id}`)
         }
     }

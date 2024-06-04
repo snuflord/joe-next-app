@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <section className="px-2 md:px-0 container mx-auto">
 
             <div className="flex flex-col md:flex-row my-5">
-                <div className="p-5 shadow-2xl bg-gradient-to-r from-indigo-600 to-indigo-950 rounded-lg w-full md:w-3/4">
+                <div className="p-3 md:p-5 shadow-2xl bg-gradient-to-r from-indigo-600 to-indigo-950 rounded-lg w-full md:w-3/4">
                     <div className="space-y-2 md:space-y-0 flex flex-col md:flex-row justify-between">
                         <h1 className="text-lg underline underline-offset-8 md:text-4xl font-bold mb-2">{article.title}</h1>
                        
@@ -52,7 +52,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 alt="API Image"
                                 width={1200}
                                 height={675}
-                                className="hidden md:block rounded-2xl mt-5 md:w-full"
+                                className="hidden md:block rounded-lg mt-5 md:w-full"
                                 priority={true}
                                 placeholder="empty"
                             />
@@ -61,7 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 alt="API Image"
                                 width={1200}
                                 height={675}
-                                className="block md:hidden rounded-2xl mt-5 md:w-full"
+                                className="block md:hidden rounded-lg mt-5 md:w-full"
                                 priority={true}
                                 placeholder="empty"
                             />
@@ -73,7 +73,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             alt="Default Image"
                             width={560}
                             height={620}
-                            className="block rounded-2xl mt-5 md:w-full"
+                            className="block rounded-lg mt-5 md:w-full"
                             priority={true}
                             placeholder="empty"
                         />
@@ -87,9 +87,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <EditButton article={propArticle}/>
                     
                 </div>
-
+                {/* Side cards */}
                 <div className="flex flex-col h-fit w-full md:w-1/4 md:ml-5 sticky top-32">
-                    <h2 className="mb-3 font-bold text-1xl">Latest Posts:</h2>
+                    <h2 className="mt-3 md:mt-0 mb-3 font-bold text-1xl">Latest Posts:</h2>
                         {listArticles ? listArticles.map((article: { id: Key | null | undefined; attributes: any }) => (
                         
                         <SideCard key={article.id} article={article}/>

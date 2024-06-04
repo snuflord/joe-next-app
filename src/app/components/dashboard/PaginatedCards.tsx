@@ -47,7 +47,11 @@ export default function PaginatedCards() {
         </div>
 
         {loading ? (
-            <div>Loading...</div>
+            <div className="grid grid-rows-1 grid-cols-2 md:grid-cols-3 md:grid-rows-3 gap-2 md:gap-3 w-full my-4">
+                {Array.from({ length: 9 }).map((_, index) => (
+                    <CardSkeleton key={index} />
+                ))}
+            </div>
         ) : articlesList && articlesList.length > 0 ? (
             <div className="grid grid-rows-1 grid-cols-2 md:grid-cols-3 md:grid-rows-3 gap-2 md:gap-3 w-full my-4">
                 {articlesList.map((article: { id: Key | null | undefined; attributes: any }) => (

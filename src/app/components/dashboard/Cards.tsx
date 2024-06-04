@@ -11,11 +11,11 @@ export function Card({article}: {article: any}) {
 
     const truncatedDescription =
     data.attributes.description.length > 100
-      ? `${data.attributes.description.substring(0, 150)}...`
+      ? `${data.attributes.description.substring(0, 100)}...`
       : data.attributes.description;
 
     return (
-        <Link href={`/articles/${data.id}`} className="group transition duration-300 bg-slate-800 rounded-lg p-4 hover:bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-32 h-full flex flex-col">
+        <Link href={`/articles/${data.id}`} className="group transition duration-300 bg-slate-800 rounded-lg p-4 md:hover:bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-32 h-full flex flex-col">
 
             <div className="flex flex-col md:flex-row justify-between">
                 <h3 className="text-xs md:text-base font-bold mb-2 w-full md:max-w-[60%]">{data.attributes.title}</h3>
@@ -37,11 +37,11 @@ export function SideCard({article}: {article: any}) {
 
     const truncatedDescription =
     data.attributes.description.length > 100
-      ? `${data.attributes.description.substring(0, 80)}...`
+      ? `${data.attributes.description.substring(0, 100)}...`
       : data.attributes.description;
 
     return (
-        <Link href={`/articles/${data.id}`} className="bg-gradient-to-r from-indigo-500 to-emerald-600 mb-3 rounded-lg p-3 min-h-30 hover:from-indigo-500/50">
+        <Link href={`/articles/${data.id}`} className="bg-gradient-to-r from-indigo-500 to-emerald-600 mb-3 rounded-lg p-3 min-h-30 md:hover:from-indigo-500/50">
             <div className="flex space-x-3">
                 <div className="w-1/2">
                     <h3 className="font-bold mb-2">{data.attributes.title}</h3>
@@ -88,7 +88,7 @@ export function SearchCard({article}: {article: any}) {
       : data.attributes.description;
 
     return (
-        <Link href={`/articles/${data.id}`} className="transition-colors duration-300 bg-indigo-900 rounded-lg p-3 md:p-5 min-h-30 hover:bg-indigo-950">
+        <Link href={`/articles/${data.id}`} className="transition-colors duration-300 bg-indigo-900 rounded-lg p-3 md:p-5 min-h-30 md:hover:bg-indigo-950">
 
             <div className="flex space-x-3">
                 <div className="w-1/2">

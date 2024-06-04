@@ -58,24 +58,21 @@ export default function Search() {
 
                 <FaSearch className="absolute font-bold text-3xl -translate-y-10 left-3 h-[18px] w-[18px] text-indigo-500 peer-focus:text-emerald-500" />
 
-                <button className='p-4 bg-emerald-500 mt-5 rounded-lg' type="submit">Search</button>
+                <button className='p-4 transition-colors duration-300 bg-emerald-500 md:hover:bg-emerald-500/80 mt-5 rounded-lg md:min-w-96' type="submit">Search</button>
             </form>
 
             <div>
+                <div className="grid grid-cols-1 auto-rows-auto md:grid-cols-3 w-full gap-2 md:gap-3 my-5">
+                {articles ? articles.map((article: { id: Key | null | undefined; attributes: any }) => (
+                                
+                    <Suspense key={article.id} fallback={<CardSkeleton/>}>
+                        <SearchCard key={article.id} article={article}/>
+                    </Suspense>
 
-            <div className="grid grid-cols-1 auto-rows-auto md:grid-cols-3 w-full gap-2 md:gap-3 my-5">
-            {articles ? articles.map((article: { id: Key | null | undefined; attributes: any }) => (
-
-                              
-                <Suspense key={article.id} fallback={<CardSkeleton/>}>
-                  <SearchCard key={article.id} article={article}/>
-                </Suspense>
-
-                )) : 
-                <p>No articles!</p>
-                }
-            </div>
-            
+                    )) : 
+                    <p>No articles!</p>
+                    }
+                </div>
             </div>
         </div>
     )

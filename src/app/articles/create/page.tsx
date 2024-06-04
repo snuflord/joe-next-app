@@ -36,13 +36,14 @@ export default function CreateArticle() {
     setValues({...values, [name]: value});
   }
   
-  function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
-      const file = e.target.files?.[0];
-      if (file) {
-        setFile(file);
-        console.log(file)
-      }
+  // selected image updates state
+  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFile(file);
+      console.log(file)
     }
+  }
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -56,9 +57,11 @@ export default function CreateArticle() {
     // IMAGE UPLOAD
     if (!file) {
         console.error('No file selected');
+        toast.error('Please include an image for your article')
         return;
     }
 
+    // media key value updated with image state value. 
     const imageFile = {
         media: file,
     }
@@ -69,6 +72,7 @@ export default function CreateArticle() {
     imageData.append('field', 'media');
     imageData.append('data', JSON.stringify(imageFile));
 
+    // strapi media api endpoint.
     const responseImg = await fetch(`${API_URL}/upload`, {
         method: 'POST',
         headers: {
@@ -81,9 +85,12 @@ export default function CreateArticle() {
         const imageResponse = await responseImg.json();
         console.log(imageResponse);
         setFile(imageResponse)
+
+    } else {
+        console.log('error in uploading image to Strapi')
     }
 
-    // REST OF ARTICLE DATA
+    // REST OF ARTICLE DATA - image returned from above response appended to be associated with article.
     const articleData = {
         title: values.title,
         description: values.description,

@@ -116,7 +116,7 @@ export async function getArticle(id: string, revalidate = false) {
 export async function getLimitedUserArticles(id: string) {
   try {
     
-    const response = await fetch(`${API_URL}/articles?&pagination[limit]=6&filters[associatedUser][$eq]=${id}`, {
+    const response = await fetch(`${API_URL}/articles?&pagination[limit]=6&filters[associatedUser][$eq]=${id}&sort[0]=createdAt:desc&[populate]=*`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
