@@ -134,7 +134,7 @@ const registerUser = async (user: { username: string; identifier: string; passwo
             router.push('/dashboard')
 
         } else {
-            const errorMessage = data.error.message;
+            const errorMessage = data.error;
             setError(errorMessage);
             console.log(errorMessage);
         }

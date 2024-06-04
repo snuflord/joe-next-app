@@ -14,8 +14,8 @@ export default function RegisterPage() {
 
     useEffect(() => {
         if (error) {
-          console.log(`Register Page error is: ${error}`);
-          toast.error( error );
+          console.log(`Register Page error is: ${error.message}`);
+          toast.error( error.message );
         }
     }, [error]);
 
