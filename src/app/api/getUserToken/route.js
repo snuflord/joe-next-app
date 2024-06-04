@@ -11,6 +11,6 @@ export async function GET(req, res) {
 
     } catch (error) {
         console.log('No user signed in')
-        return NextResponse.next();
+        throw new Error('No user signed in');
     }
 }
