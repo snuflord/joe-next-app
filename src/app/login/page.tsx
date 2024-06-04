@@ -78,7 +78,7 @@ export default function LoginPage() {
                 <button type='submit' value='Login' className='btn my-4 w-full'>Login</button>
             </form>
 
-            <p className='my-2'>Don't have an account? <Link className='underline' href='/register'>Register</Link></p>
+            <p className='my-2'>Don&apos;t have an account? <Link className='underline' href='/register'>Register</Link></p>
         </div>
   )
 }

@@ -37,7 +37,7 @@ export default function LargeCard() {
       {articles && articles.length > 0 ? articles.map((article: { id: Key | null | undefined; attributes: any }) => (
               <Card key={article.id} article={article}/>
             )) : 
-                <h1 className='font-bold text-2xl w-full md:text-4xl'>You haven't posted anything yet! Your latest posts will appear here.</h1>
+                <h1 className='font-bold text-2xl w-full md:text-4xl'>You haven&apos;t posted anything yet! Your latest posts will appear here.</h1>
             }
       </div> 
     </div>

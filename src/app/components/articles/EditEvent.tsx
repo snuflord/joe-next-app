@@ -54,7 +54,7 @@ export default function EditEvent({article}: {article: any}) {
                 router.push('/articles/redirected');
             }
         }
-      }, [user]);
+      }, [user, articleId, articleData.associatedUser, router]);
 
 
     const handleInputChange = (e: { target: { name: any; value: string; }; }) => {

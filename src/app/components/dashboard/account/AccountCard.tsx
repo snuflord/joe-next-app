@@ -61,7 +61,7 @@ export default function AccountCard() {
                     <ModalHeader className="flex flex-col gap-1 font-bold text-1xl md:text-2xl">DELETE ACCOUNT?</ModalHeader>
 
                     <ModalBody>
-                        <p className="font-bold text-1xl">Are you sure you want to delete your account? Your media items won't be deleted alongside your account</p>
+                        <p className="font-bold text-1xl">Are you sure you want to delete your account? Your media items won&apos;t be deleted alongside your account</p>
 
                         <button className="p-4 transition-colors duration-300 bg-red-500 hover:bg-red-600 rounded-lg" onClick={handleDeleteUser}>Delete Account</button>
                     </ModalBody>
