@@ -84,16 +84,16 @@ export async function getArticles({ page }: { page?: number | undefined }) {
 
 // single article
 export async function getArticle(id: string, revalidate = false) {
-  const baseURL =
-    process.env.NODE_ENV === "development"
-      ? `${NEXT_URL}`
-      : "https://your-live-website.com";
+  // const baseURL =
+  //   process.env.NODE_ENV === "development"
+  //     ? `${NEXT_URL}`
+  //     : "https://your-live-website.com";
 
-  if (revalidate) {
-    await fetch(`${baseURL}/api/article/revalidateArticle`, {
-      method: "POST",
-    });
-  }
+  // if (revalidate) {
+  //   await fetch(`${baseURL}/api/article/revalidateArticle`, {
+  //     method: "POST",
+  //   });
+  // }
 
   const res = await fetch(`${API_URL}/articles/${id}?[populate]=*`, { 
     headers: {

@@ -37,7 +37,7 @@ export default function Search() {
           console.error('Error fetching articles:', error);
           toast.error('There are no articles that match your search term :(');
       }
-  };
+    };
 
     return (
         <div>
