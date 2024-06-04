@@ -60,7 +60,7 @@ export default function UsersCards() {
                     ))}
                 </div>
             ) : (
-                <div className="bg-slate-800 rounded-lg p-4 hover:bg-gradient-to-r from-indigo-500 to-emerald-600 w-full min-h-32 h-full">
+                <div className="bg-slate-800/50 rounded-lg p-4 w-full md:w-1/3 min-h-32 h-full">
                     <span className="font-bold">No items found !!</span>
                 </div>
             )}

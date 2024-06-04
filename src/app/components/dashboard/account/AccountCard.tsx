@@ -29,8 +29,8 @@ export default function AccountCard() {
     const handleDeleteUser = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        console.log(thisUser?.id); // Access user ID from state
-        console.log(token);
+        // console.log(thisUser?.id); // Access user ID from state
+        // console.log(token);
 
         if (thisUser) {
             const userObj = {
@@ -43,12 +43,12 @@ export default function AccountCard() {
 
     return (
         <div className="mt-2 p-2 md:p-5 shadow-2xl bg-gradient-to-r min-h-[50vh] from-indigo-500 to-emerald-600 rounded-lg w-full">
-            <div className="flex flex-col space-y-3">
+            <div className="flex flex-col space-y-3 mb-3">
                 <h3 className="mt-3 font-bold text-2xl md:text-3xl">Username: {thisUser?.username}</h3>
                 {/* <span className="text-1xl md:text-2xl">Account created on {new Date(thisUser?.createdAt).toLocaleDateString("en-UK")}</span> */}
                 <span className="text-1xl md:text-2xl">User ID: {thisUser?.id}</span>
                 <span className="text-1xl md:text-2xl">Email: {thisUser?.email}</span>
-                <span className="text-1xl md:text-2xl font-bold">My Posts:</span>
+                <div className="text-1xl md:text-2xl font-bold">My Posts:</div>
             </div>
             <UsersCards />
 

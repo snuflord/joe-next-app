@@ -1,31 +1,25 @@
 import { NextResponse } from 'next/server';
 import { API_URL } from '../../../../config';
+import { NextRequest } from 'next/server';
 
 // DELETE USER
-
-export async function POST(req: { json: () => PromiseLike<{ userId: string; token: any; }> | { userId: any; token: any; }; }, res: any) {
-
+export async function POST(req: NextRequest) {
     const { userId, token } = await req.json();
 
-    console.log(`Here is the deleteUser request: ${userId}, and token: ${token}`)
+    console.log(`Here is the deleteUser request: ${userId}, and token: ${token}`);
 
     const strapiRes = await fetch(`${API_URL}/users/${userId}`, {
         method: 'DELETE',
         headers: { 
             Authorization: `Bearer ${token}`
-          },
-        })
+        },
+    });
 
-        if(!strapiRes.ok) {
+    if (!strapiRes.ok) {
+        console.log('error cannot delete');
+        return NextResponse.json({ success: false, message: 'Error deleting user' }, { status: 500 });
+    }
 
-        // toast.error(data.message)
-        console.log('error cannot delete')
-        
-        } else {
-  
-            console.log('user deleted')
-        }
-    
-    
-    return NextResponse.json({success: true});
+    console.log('user deleted');
+    return NextResponse.json({ success: true });
 }
