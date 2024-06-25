@@ -3,7 +3,6 @@ import Image from "next/image";
 import Markdown from 'react-markdown'
 import defaultImage from '@/public/tech_bg_next.jpeg'
 import EditButton from "@/app/components/articles/EditButton";
-import Link from "next/link";
 import { Key } from "react";
 import { SideCard } from "@/app/components/dashboard/Cards";
 
@@ -83,7 +82,6 @@ export default async function Page({ params }: { params: { id: string } }) {
                         {article.description}
                     </Markdown>
 
-
                     <EditButton article={propArticle}/>
                     
                 </div>
@@ -98,8 +96,6 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <p>FALLBACK TEXT</p>
                     }
                 </div>        
-                
-                
             </div> 
         </section>
     )

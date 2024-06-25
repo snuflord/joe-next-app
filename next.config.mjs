@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['res.cloudinary.com'],
+        domains: ['res.cloudinary.com', 'deserving-diamond-d7c8c98222.media.strapiapp.com'],
         formats: ['image/avif', 'image/webp',],
         remotePatterns: [
         {
